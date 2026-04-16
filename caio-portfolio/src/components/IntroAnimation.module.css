@@ -1,0 +1,201 @@
+/* ── Stars / Constellation canvas ── */
+.bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  opacity: 0;
+  filter: blur(12px);
+  transition: opacity 0.9s ease, filter 0.9s ease;
+  pointer-events: none;
+}
+.bgVisible {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+/* ── Scanlines ── */
+.scanline {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.03) 3px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Intro overlay ── */
+.intro {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  opacity: 0;
+  filter: blur(12px);
+  transition: opacity 0.9s ease, filter 0.9s ease;
+  pointer-events: none;
+}
+.introVisible {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.introInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ── Name text layers ── */
+.nameLine {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 100;
+  font-size: clamp(80px, 14vw, 160px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 0.9;
+  text-align: left;
+  position: relative;
+  display: block;
+}
+
+.nameWrap {
+  position: relative;
+  display: block;
+  line-height: 0.92;
+}
+
+/* base layer: stroke only */
+.nameBase {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.6);
+}
+
+/* fill layer: clip-path controlled by JS */
+.nameFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: rgba(255,255,255,0.92);
+  -webkit-text-stroke: 0px transparent;
+  clip-path: inset(0 100% 0 100%);
+  white-space: nowrap;
+}
+
+/* glitch ghost */
+.nameGhost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: transparent;
+  -webkit-text-stroke: 0.5px rgba(255,255,255,0.15);
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── Subtitle ── */
+.subtitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(10px, 1.2vw, 13px);
+  font-weight: 300;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0);
+  transition: color 0.8s ease;
+  margin-top: 28px;
+}
+.subtitleShow {
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── Hero overlay (text only — planet bg is on the shared canvas in App.tsx) ── */
+.hero {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+/* Dark vignette over the planet canvas */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  pointer-events: none;
+}
+
+/* ── Hero content ── */
+.nameCorner {
+  position: absolute;
+  top: 28px;
+  left: 36px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.06em;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.nameCornerShow { opacity: 1; }
+
+.heroContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 640px;
+  width: 90%;
+  z-index: 2;
+  min-height: 280px;
+}
+
+.heroRole {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4D8EFF;
+  margin-bottom: 18px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.heroRoleShow { opacity: 1; }
+
+.heroDivider {
+  width: 32px;
+  height: 1px;
+  background: #4D8EFF;
+  margin-bottom: 24px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.heroDividerShow { opacity: 1; }
+
+.heroBody {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  line-height: 2.0;
+  color: rgba(255,255,255,0.82);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.heroBodyShow { opacity: 1; }
+
+/* word-by-word spans */
+.W {
+  display: inline;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.Wshow { opacity: 1; }

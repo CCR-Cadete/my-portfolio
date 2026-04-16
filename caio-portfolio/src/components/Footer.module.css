@@ -1,0 +1,99 @@
+/* ── Footer — based on FooterPortfolio Figma component (1440×600) ── */
+.footer {
+  background: rgba(5, 7, 15, 0.5);
+  width: 100%;
+  min-height: 600px;
+  padding: 80px;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 25;
+}
+
+/* ── Left column ── */
+.left {
+  flex: 0 0 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.introSection {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: normal;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.body {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.7;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.copyright {
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* ── Vertical divider ── */
+.divider {
+  flex: 0 0 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 285px;
+  align-self: stretch;
+}
+
+/* ── Right column — social links ── */
+.contactSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: flex-start;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #FFFFFF;
+  transition: color 0.2s ease;
+}
+
+.socialLink:hover {
+  color: #4D8EFF;
+}
+
+.socialIcon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialName {
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: normal;
+  white-space: nowrap;
+}
