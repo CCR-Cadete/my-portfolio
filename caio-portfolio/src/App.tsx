@@ -3,10 +3,13 @@ import IntroAnimation from './components/IntroAnimation'
 import HeroScroll from './components/HeroScroll'
 import Footer from './components/Footer'
 import Nav from './components/Nav'
+import AboutPanel from './components/AboutPanel'
+import CustomCursor from './components/CustomCursor'
 
 export default function App() {
   const planetCanvasRef = useRef<HTMLCanvasElement>(null)
   const [scrollReady, setScrollReady] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -45,10 +48,16 @@ export default function App() {
       />
 
       {/* Global nav — top right, appears after intro */}
-      <Nav visible={scrollReady} />
+      <Nav visible={scrollReady} onAboutClick={() => setAboutOpen(true)} />
 
       {/* Footer — normal flow after the scroll animation, final destination */}
       <Footer />
+
+      {/* About panel — slides in on top of everything */}
+      <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
+
+      {/* Custom cursor — always on top */}
+      <CustomCursor />
     </>
   )
 }

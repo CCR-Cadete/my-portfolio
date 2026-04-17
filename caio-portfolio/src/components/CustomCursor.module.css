@@ -1,0 +1,32 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* Center the circle on the hotspot */
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  margin-top: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  background: transparent;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  /* Only transition size/color, not position (position is lerped via JS) */
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    margin 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.hovered {
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  margin-top: -11px;
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+}

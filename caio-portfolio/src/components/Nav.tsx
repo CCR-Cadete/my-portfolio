@@ -4,11 +4,13 @@ import styles from './Nav.module.css'
 
 interface Props {
   visible: boolean
+  onAboutClick: () => void
 }
 
-export default function Nav({ visible }: Props) {
+export default function Nav({ visible, onAboutClick }: Props) {
   const [workActive,    setWorkActive]    = useState(false)
   const [contactActive, setContactActive] = useState(false)
+  const [atTop,         setAtTop]         = useState(true)
 
   // Watch works-section classList for worksShow
   useEffect(() => {
@@ -33,9 +35,10 @@ export default function Nav({ visible }: Props) {
     return () => observer.disconnect()
   }, [])
 
-  // Watch scroll position to detect when footer is visible
+  // Watch scroll position to detect footer visibility and top-of-page
   useEffect(() => {
     function onScroll() {
+      setAtTop(window.scrollY < 20)
       const footer = document.getElementById('site-footer')
       if (!footer) return
       const rect = footer.getBoundingClientRect()
@@ -66,7 +69,7 @@ export default function Nav({ visible }: Props) {
     footer.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const homeActive = !workActive && !contactActive
+  const homeActive = atTop && !workActive && !contactActive
 
   return (
     <nav className={`${styles.nav} ${visible ? styles.navVisible : ''}`}>
@@ -84,7 +87,11 @@ export default function Nav({ visible }: Props) {
       >
         Work
       </a>
-      <a href="#about" className={styles.link}>About</a>
+      <a
+        href="#about"
+        className={styles.link}
+        onClick={(e) => { e.preventDefault(); onAboutClick() }}
+      >About</a>
       <a href="#contact" className={`${styles.link} ${contactActive ? styles.linkActive : ''}`} onClick={handleContactClick}>Contact</a>
     </nav>
   )
