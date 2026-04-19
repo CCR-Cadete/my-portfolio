@@ -5,7 +5,6 @@
   z-index: 100;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1);
 }
 
 .overlayOpen {
@@ -54,15 +53,10 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 0 40px 120px;
-  opacity: 0;
-  transform: translateY(24px) scale(0.992);
-  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
-              transform 0.65s cubic-bezier(0.22,1,0.36,1);
 }
 
 .pageIn {
   opacity: 1;
-  transform: none;
 }
 
 /* ── Scroll-reveal ── */

@@ -10,6 +10,25 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Firefox */
+  scrollbar-color: #4D8EFF #05070F;
+  scrollbar-width: thin;
+}
+
+/* WebKit / Blink (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #05070F;
+}
+::-webkit-scrollbar-thumb {
+  background: #4D8EFF;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7aaaff;
 }
 
 #root {
