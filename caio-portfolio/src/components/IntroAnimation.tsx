@@ -21,29 +21,9 @@ interface Particle {
   isCon: boolean
 }
 
-interface LetterAnim {
-  span:       HTMLSpanElement
-  sx: number; sy: number
-  ex: number; ey: number
-  rotAmt:     number
-  chaosDist:  number
-  chaosAng:   number
-  suckScale:  number
-  delay:      number
-  dur:        number
-}
-
-// ── Easing (exact copies from V1.html) ──────────────────────────
+// ── Easing ──────────────────────────────────────────────────────
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2
-}
-function easeIn(t: number): number { return t*t*t }
-function lerp(a: number, b: number, t: number): number { return a + (b-a)*t }
-function easeInOutBack(t: number): number {
-  const c1 = 1.70158, c2 = c1 * 1.525
-  return t < 0.5
-    ? (Math.pow(2*t, 2) * ((c2+1)*2*t - c2)) / 2
-    : (Math.pow(2*t-2, 2) * ((c2+1)*(2*t-2) + c2) + 2) / 2
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -65,6 +45,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
   const heroDividerRef = useRef<HTMLDivElement>(null)
   const heroBodyRef    = useRef<HTMLDivElement>(null)
   const heroContentRef = useRef<HTMLDivElement>(null)
+  const introInnerRef  = useRef<HTMLDivElement>(null)
 
   // All mutable animation state lives here — never triggers re-renders
   const anim = useRef({
@@ -77,6 +58,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
     rafId:               0,
     glitchIv:            null as ReturnType<typeof setInterval> | null,
     timers:              [] as ReturnType<typeof setTimeout>[],
+    textPos:             { x: 0.5, y: 0.5 },
   })
 
   useEffect(() => {
@@ -259,8 +241,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       const contractStart = performance.now()
 
       function contractStep(now: number) {
-        st.cProgress           = Math.min((now - contractStart) / contractDur, 1)
-        st.constellationAlpha  = 1 - st.cProgress
+        st.cProgress          = Math.min((now - contractStart) / contractDur, 1)
+        st.constellationAlpha = 1 - st.cProgress
 
         // planet canvas: opacity quadratic (starts slow), scale 1.3 → 1.0
         pc.style.opacity   = (st.cProgress * st.cProgress).toFixed(3)
@@ -269,166 +251,69 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         if (st.cProgress < 1) {
           requestAnimationFrame(contractStep)
         } else {
-          st.constellationAlpha  = 0
-          st.cState              = 'done'
-          pc.style.opacity  = '1'
-          pc.style.transform = 'scale(1)'
+          st.constellationAlpha = 0
+          st.cState             = 'done'
+          pc.style.opacity      = '1'
+          pc.style.transform    = 'scale(1)'
         }
       }
       requestAnimationFrame(contractStep)
     }
 
-    // ── Letter suck + hero text reveal ──────────────────────────
+    // ── Text collapses to center with particles, hero reveals after ─
     function revealHero() {
       st.heroVisible = true
 
+      // Fade out subtitle
       const subtitle = subtitleRef.current
       if (subtitle) {
         subtitle.style.transition = 'opacity 0.35s ease'
         subtitle.style.opacity    = '0'
       }
 
-      const targetX   = 52
-      const targetY   = 32
-      // Measure intro font size from the first .nameLine element
-      const firstLine = baseCaioRef.current
-      if (!firstLine) return
-      const introSize = parseFloat(getComputedStyle(firstLine).fontSize)
-      const finalSize = 32
-      const suckScale = finalSize / introSize
-      const lineH     = finalSize * 1.1
-
-      const allLetters: LetterAnim[] = []
-
-      const wraps  = [wrapCaioRef.current,    wrapCadeteRef.current]
-      const fills  = [fillCaioRef.current,    fillCadeteRef.current]
-      const bases  = [baseCaioRef.current,    baseCadeteRef.current]
-      const ghosts = [ghostCaioRef.current,   ghostCadeteRef.current]
-
-      wraps.forEach((wrap, lineIdx) => {
-        if (!wrap) return
-        const base  = bases[lineIdx]
-        const ghost = ghosts[lineIdx]
-        if (base)  base.style.opacity  = '0'
-        if (ghost) ghost.style.opacity = '0'
-
-        const fill = fills[lineIdx]
-        if (!fill) return
-
-        const text = fill.textContent ?? ''
-        fill.textContent    = ''
-        fill.style.clipPath = 'none'
-
-        // Hidden clone at final position — used to measure where letters land
-        const clone = fill.cloneNode(false) as HTMLDivElement
-        clone.style.position   = 'fixed'
-        clone.style.left       = targetX + 'px'
-        clone.style.top        = (targetY + lineIdx * lineH) + 'px'
-        clone.style.fontSize   = finalSize + 'px'
-        clone.style.opacity    = '0'
-        clone.style.whiteSpace = 'nowrap'
-        clone.style.clipPath   = 'none'
-        clone.textContent      = text
-        document.body.appendChild(clone)
-        void clone.offsetWidth  // force layout
-
-        // Spans in the real fill (for animation)
-        const spans = text.split('').map(ch => {
-          const sp = document.createElement('span')
-          sp.textContent   = ch
-          sp.style.display = 'inline-block'
-          fill.appendChild(sp)
-          return sp
-        })
-        void fill.offsetWidth  // force layout
-
-        // Measure START positions (large font, centered)
-        const starts = spans.map(sp => {
-          const r = sp.getBoundingClientRect()
-          return { x: r.left + r.width/2, y: r.top + r.height/2 }
-        })
-
-        // Measure END positions via clone
-        clone.textContent = ''
-        const cloneSpans = text.split('').map(ch => {
-          const sp = document.createElement('span')
-          sp.textContent   = ch
-          sp.style.display = 'inline-block'
-          clone.appendChild(sp)
-          return sp
-        })
-        void clone.offsetWidth
-
-        const ends = cloneSpans.map(sp => {
-          const r = sp.getBoundingClientRect()
-          return { x: r.left + r.width/2, y: r.top + r.height/2 }
-        })
-
-        document.body.removeChild(clone)
-
-        const total = spans.length
-        spans.forEach((span, i) => {
-          const rotDir    = Math.random() > 0.5 ? 1 : -1
-          const rotAmt    = (90 + Math.random() * 270) * rotDir
-          const chaosDist = 60 + Math.random() * 80
-          const chaosAng  = Math.random() * Math.PI * 2
-          const delay     = (total - 1 - i) * 0.035 // last letter first
-
-          allLetters.push({
-            span,
-            sx: starts[i].x, sy: starts[i].y,
-            ex: ends[i].x,   ey: ends[i].y,
-            rotAmt, chaosDist, chaosAng,
-            suckScale,
-            delay,
-            dur: 0.6 + Math.random() * 0.12,
-          })
-        })
+      // Hide base and ghost — only the white fill collapses
+      ;[baseCaioRef, baseCadeteRef, ghostCaioRef, ghostCadeteRef].forEach(r => {
+        if (r.current) r.current.style.opacity = '0'
       })
 
-      const startTime = performance.now()
+      const _introEl    = introRef.current
+      const _introInner = introInnerRef.current
+      if (!_introEl || !_introInner) return
+      const introEl:    HTMLDivElement = _introEl
+      const introInner: HTMLDivElement = _introInner
 
-      function animFrame(now: number) {
-        let allDone = true
+      // Collapse to center — same 900ms as particle contraction
+      introInner.style.transformOrigin = '50% 50%'
+      const dur   = 900
+      const start = performance.now()
 
-        allLetters.forEach(L => {
-          const elapsed = (now - startTime) / 1000 - L.delay
-          if (elapsed < 0) { allDone = false; return }
-          const t = Math.min(elapsed / L.dur, 1)
-          if (t < 1) allDone = false
+      function collapseFrame(now: number) {
+        const raw = Math.min((now - start) / dur, 1)
+        const t   = easeInOutCubic(raw)
 
-          const te = easeInOutBack(t)
+        // Text shrinks into center point in sync with particles
+        introInner.style.transform = `scale(${(1 - t).toFixed(4)})`
+        introInner.style.opacity   = (1 - t).toFixed(4)
 
-          // Quadratic bezier through chaos control point
-          const cpx = (L.sx + L.ex) / 2 + Math.cos(L.chaosAng) * L.chaosDist
-          const cpy = (L.sy + L.ey) / 2 + Math.sin(L.chaosAng) * L.chaosDist
-          const bx  = (1-te)*(1-te)*L.sx + 2*(1-te)*te*cpx + te*te*L.ex
-          const by  = (1-te)*(1-te)*L.sy + 2*(1-te)*te*cpy + te*te*L.ey
-
-          // Rotation: spins during flight (sin wave), straight at landing
-          const rotEase = t < 0.8 ? easeIn(t / 0.8) : 1
-          const rot     = L.rotAmt * Math.sin(rotEase * Math.PI)
-          const scale   = lerp(1, L.suckScale, easeInOutBack(t))
-
-          L.span.style.transform = `translate(${bx - L.sx}px, ${by - L.sy}px) rotate(${rot}deg) scale(${scale})`
-        })
-
-        if (!allDone) {
-          requestAnimationFrame(animFrame)
-        } else {
-          // All letters landed — reveal hero texts
-          setTimeout(() => {
-            nameCornerRef.current?.classList.add(styles.nameCornerShow)
-            heroRoleRef.current?.classList.add(styles.heroRoleShow)
-            heroDividerRef.current?.classList.add(styles.heroDividerShow)
-            setTimeout(() => {
-              heroBodyRef.current?.classList.add(styles.heroBodyShow)
-              setTimeout(revealHeroText, 300)
-            }, 150)
-          }, 100)
+        if (raw < 1) {
+          requestAnimationFrame(collapseFrame)
+          return
         }
+
+        // Collapse done — hide intro overlay
+        introEl.style.opacity = '0'
+
+        // Reveal hero content
+        setTimeout(() => {
+          heroRoleRef.current?.classList.add(styles.heroRoleShow)
+          heroDividerRef.current?.classList.add(styles.heroDividerShow)
+          setTimeout(() => {
+            heroBodyRef.current?.classList.add(styles.heroBodyShow)
+            setTimeout(revealHeroText, 300)
+          }, 150)
+        }, 100)
       }
-      requestAnimationFrame(animFrame)
+      requestAnimationFrame(collapseFrame)
     }
 
     // ── Word-by-word body reveal ─────────────────────────────────
@@ -447,7 +332,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         return sp
       })
 
-      // Unlock scroll as words begin to appear
+      // Unlock scroll and show corner name alongside the nav
+      nameCornerRef.current?.classList.add(styles.nameCornerShow)
       onScrollReady()
 
       let idx = 0
@@ -481,6 +367,11 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       introEl.style.transform  = 'none'
       introEl.style.transition = 'none'
       bgEl.style.transition    = 'none'
+      if (introInnerRef.current) {
+        introInnerRef.current.style.transform       = 'none'
+        introInnerRef.current.style.transformOrigin = ''
+        introInnerRef.current.style.opacity         = ''
+      }
 
       // Restore fill layers text
       const fillItems = [
@@ -611,7 +502,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       <div className={styles.scanline} />
 
       <div ref={introRef} className={styles.intro}>
-        <div className={styles.introInner}>
+        <div ref={introInnerRef} className={styles.introInner}>
           {/* CAIO */}
           <div ref={wrapCaioRef} className={styles.nameWrap}>
             <div ref={baseCaioRef}  className={`${styles.nameLine} ${styles.nameBase}`}>CAIO</div>
@@ -631,8 +522,9 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       </div>
 
       <div ref={heroRef} className={styles.hero}>
-        {/* nameCorner is populated solely by the letter-suck animation — no static text */}
-        <div ref={nameCornerRef} className={styles.nameCorner} />
+        <div ref={nameCornerRef} className={styles.nameCorner}>
+          CAIO<br />CADETE
+        </div>
         <div ref={heroContentRef} className={styles.heroContent}>
           <div ref={heroRoleRef}    className={styles.heroRole}>Product &amp; Interactive Designer</div>
           <div ref={heroDividerRef} className={styles.heroDivider} />

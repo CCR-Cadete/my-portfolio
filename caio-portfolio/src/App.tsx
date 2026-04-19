@@ -4,12 +4,14 @@ import HeroScroll from './components/HeroScroll'
 import Footer from './components/Footer'
 import Nav from './components/Nav'
 import AboutPanel from './components/AboutPanel'
+import OmniControlPanel from './components/OmniControlPanel'
 import CustomCursor from './components/CustomCursor'
 
 export default function App() {
   const planetCanvasRef = useRef<HTMLCanvasElement>(null)
   const [scrollReady, setScrollReady] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [omniOpen, setOmniOpen] = useState(false)
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -45,6 +47,7 @@ export default function App() {
       <HeroScroll
         planetCanvasRef={planetCanvasRef}
         enabled={scrollReady}
+        onProjectClick={(id) => { if (id === 'omnicontrol') setOmniOpen(true) }}
       />
 
       {/* Global nav — top right, appears after intro */}
@@ -55,6 +58,9 @@ export default function App() {
 
       {/* About panel — slides in on top of everything */}
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
+
+      {/* OmniControl case study panel */}
+      <OmniControlPanel open={omniOpen} onClose={() => setOmniOpen(false)} />
 
       {/* Custom cursor — always on top */}
       <CustomCursor />

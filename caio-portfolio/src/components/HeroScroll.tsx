@@ -10,6 +10,7 @@ const BASE   = 'https://res.cloudinary.com/dfiyxjf5t/image/upload/f_webp,q_75/'
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
   enabled: boolean
+  onProjectClick?: (id: string) => void
 }
 
 const SCROLL_WORDS = [
@@ -42,7 +43,7 @@ function frameUrl(i: number) {
   return `${BASE}${FRAMES[i]}.png`
 }
 
-export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
+export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }: Props) {
   const overlayRef    = useRef<HTMLDivElement>(null)
   const worksRef      = useRef<HTMLDivElement>(null)
   const rowRefs       = useRef<(HTMLDivElement | null)[]>([])
@@ -304,6 +305,7 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
                 ref={el => { rowRefs.current[i] = el }}
                 className={styles.workRow}
                 onMouseEnter={() => setActiveProject(p.id)}
+                onClick={() => onProjectClick?.(p.id)}
               >
                 <span
                   className={styles.workTitle}

@@ -138,14 +138,16 @@
   position: absolute;
   top: 28px;
   left: 36px;
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.9);
-  letter-spacing: 0.06em;
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 100;
+  font-size: 26px;
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
   z-index: 2;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
 }
 .nameCornerShow { opacity: 1; }
 
