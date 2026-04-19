@@ -21,18 +21,16 @@ interface Particle {
   isCon: boolean
 }
 
-// ── Easing ──────────────────────────────────────────────────────
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2
 }
 
-// ────────────────────────────────────────────────────────────────
 export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props) {
   const bgCanvasRef    = useRef<HTMLCanvasElement>(null)
   const introRef       = useRef<HTMLDivElement>(null)
   const wrapCaioRef    = useRef<HTMLDivElement>(null)
   const wrapCadeteRef  = useRef<HTMLDivElement>(null)
-  const baseCaioRef    = useRef<HTMLDivElement>(null)   // also used for font-size measurement
+  const baseCaioRef    = useRef<HTMLDivElement>(null)
   const baseCadeteRef  = useRef<HTMLDivElement>(null)
   const fillCaioRef    = useRef<HTMLDivElement>(null)
   const fillCadeteRef  = useRef<HTMLDivElement>(null)
@@ -47,9 +45,9 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
   const heroContentRef = useRef<HTMLDivElement>(null)
   const introInnerRef  = useRef<HTMLDivElement>(null)
 
-  // All mutable animation state lives here — never triggers re-renders
   const anim = useRef({
     particles:           [] as Particle[],
+    cps:                 [] as Particle[],  // constellation subset — cached, avoids per-frame filter
     cState:              'idle' as 'idle' | 'contracting' | 'expanding' | 'done',
     cProgress:           0,
     expandScale:         1,
@@ -65,20 +63,17 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
     const st      = anim.current
     const _bgCanvas = bgCanvasRef.current
     if (!_bgCanvas) return
-    // Explicit non-null type so nested function declarations preserve it
     const bgCanvas: HTMLCanvasElement = _bgCanvas
     const ctx = bgCanvas.getContext('2d')!
 
     let mounted = true
 
-    // Pre-size the shared planet canvas
     const pCanvas = planetCanvasRef.current
     if (pCanvas) {
       pCanvas.width  = window.innerWidth
       pCanvas.height = window.innerHeight
     }
 
-    // ── Resize ──────────────────────────────────────────────────
     function resize() {
       bgCanvas.width  = window.innerWidth
       bgCanvas.height = window.innerHeight
@@ -89,8 +84,12 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
 
     function initConstellation() {
       const W = bgCanvas.width, H = bgCanvas.height
-      st.particles = Array.from({ length: 175 }, (_, i) => {
-        const isCon = i < 55
+      // Fewer particles on mobile — still looks good, runs much faster
+      const isMobile = W <= 768
+      const TOTAL_P  = isMobile ? 80  : 175
+      const CON_P    = isMobile ? 20  : 55
+      st.particles = Array.from({ length: TOTAL_P }, (_, i) => {
+        const isCon = i < CON_P
         const ox    = Math.random(), oy = Math.random()
         const angle = Math.atan2(oy - 0.5, ox - 0.5) || Math.random() * Math.PI * 2
         return {
@@ -106,73 +105,95 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           isCon,
         }
       })
+      // Cache constellation particles once — avoids a new array allocation every frame
+      st.cps = st.particles.filter(p => p.isCon)
     }
 
-    // ── Stars / constellation draw loop ─────────────────────────
     function drawBgFrame(ts: number) {
+      // Pause when tab is not visible — browser already throttles rAF but this avoids
+      // any unnecessary computation on the frames that do fire while hidden
+      if (document.hidden) {
+        st.rafId = requestAnimationFrame(drawBgFrame)
+        return
+      }
+
       const W = bgCanvas.width, H = bgCanvas.height
       ctx.clearRect(0, 0, W, H)
       const t = ts * 0.001
 
-      st.particles.forEach(p => {
-        if (st.cState === 'idle') {
-          p.ox = Math.max(0.01, Math.min(0.99, p.ox + p.dx))
-          p.oy = Math.max(0.01, Math.min(0.99, p.oy + p.dy))
-          p.x  = p.ox * W
-          p.y  = p.oy * H
-        } else if (st.cState === 'contracting') {
-          const e = easeInOutCubic(st.cProgress)
-          p.x = p.ox * W + (W * 0.5 - p.ox * W) * e
-          p.y = p.oy * H + (H * 0.5 - p.oy * H) * e
-        } else if (st.cState === 'expanding') {
-          p.x += p.ex * Math.max(W, H) * 0.06
-          p.y += p.ey * Math.max(W, H) * 0.06
-        }
+      // ── Particle simulation — skipped entirely once intro is done ──
+      // After the intro completes, constellationAlpha = 0 so particles are invisible.
+      // There is no reason to simulate or draw them; only the waveform remains.
+      if (st.cState !== 'done') {
+        st.particles.forEach(p => {
+          if (st.cState === 'idle') {
+            p.ox = Math.max(0.01, Math.min(0.99, p.ox + p.dx))
+            p.oy = Math.max(0.01, Math.min(0.99, p.oy + p.dy))
+            p.x  = p.ox * W
+            p.y  = p.oy * H
+          } else if (st.cState === 'contracting') {
+            const e = easeInOutCubic(st.cProgress)
+            p.x = p.ox * W + (W * 0.5 - p.ox * W) * e
+            p.y = p.oy * H + (H * 0.5 - p.oy * H) * e
+          } else if (st.cState === 'expanding') {
+            p.x += p.ex * Math.max(W, H) * 0.06
+            p.y += p.ey * Math.max(W, H) * 0.06
+          }
 
-        const twinkle = 0.4 + 0.6 * Math.sin(t * p.sp * 60 + p.ph)
-        let alpha = p.a * twinkle * st.constellationAlpha
-        if (st.cState === 'expanding') alpha *= (1 - st.expandScale)
+          const twinkle = 0.4 + 0.6 * Math.sin(t * p.sp * 60 + p.ph)
+          let alpha = p.a * twinkle * st.constellationAlpha
+          if (st.cState === 'expanding') alpha *= (1 - st.expandScale)
 
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${Math.max(0, alpha)})`
-        ctx.fill()
-      })
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(255,255,255,${Math.max(0, alpha)})`
+          ctx.fill()
+        })
 
-      // Constellation connection lines
-      if (st.constellationAlpha > 0 && st.cState !== 'expanding') {
-        const cps     = st.particles.filter(p => p.isCon)
-        const maxDist = W * 0.18
-        for (let i = 0; i < cps.length; i++) {
-          for (let j = i + 1; j < cps.length; j++) {
-            const dx = cps[i].x - cps[j].x
-            const dy = cps[i].y - cps[j].y
-            const d  = Math.sqrt(dx*dx + dy*dy)
-            if (d < maxDist) {
-              ctx.beginPath()
-              ctx.moveTo(cps[i].x, cps[i].y)
-              ctx.lineTo(cps[j].x, cps[j].y)
-              ctx.strokeStyle = `rgba(255,255,255,${st.constellationAlpha * (1 - d/maxDist) * 0.22})`
-              ctx.lineWidth = 0.4
-              ctx.stroke()
+        // ── Constellation lines ──
+        // Use cached cps array (no per-frame filter allocation).
+        // Use d² comparison to avoid sqrt on the majority of pairs that are too far.
+        if (st.constellationAlpha > 0 && st.cState !== 'expanding') {
+          const maxDist  = W * 0.18
+          const maxDist2 = maxDist * maxDist
+          for (let i = 0; i < st.cps.length; i++) {
+            for (let j = i + 1; j < st.cps.length; j++) {
+              const dx = st.cps[i].x - st.cps[j].x
+              const dy = st.cps[i].y - st.cps[j].y
+              const d2 = dx * dx + dy * dy
+              if (d2 < maxDist2) {
+                const d = Math.sqrt(d2)
+                ctx.beginPath()
+                ctx.moveTo(st.cps[i].x, st.cps[i].y)
+                ctx.lineTo(st.cps[j].x, st.cps[j].y)
+                ctx.strokeStyle = `rgba(255,255,255,${(st.constellationAlpha * (1 - d / maxDist) * 0.22).toFixed(3)})`
+                ctx.lineWidth = 0.4
+                ctx.stroke()
+              }
             }
           }
         }
       }
 
-      // Waveform (hero phase only)
+      // ── Waveform (hero phase only) ──
       if (st.heroVisible) {
         const wY      = H * 0.82
-        const wLayers = [
-          { amp: 10, freq: 0.016, sp: 0.55, a: 0.06 },
-          { amp:  6, freq: 0.027, sp: 0.85, a: 0.04 },
-        ]
+        const isMobile = W <= 768
+        // Larger step on mobile — fewer lineTo calls, still looks smooth
+        const step    = isMobile ? 4 : 2
+        // Single layer on mobile saves ~half the path calculations
+        const wLayers = isMobile
+          ? [{ amp: 10, freq: 0.016, sp: 0.55, a: 0.06 }]
+          : [
+              { amp: 10, freq: 0.016, sp: 0.55, a: 0.06 },
+              { amp:  6, freq: 0.027, sp: 0.85, a: 0.04 },
+            ]
         for (const l of wLayers) {
           ctx.beginPath()
-          for (let x = 0; x <= W; x += 2) {
+          for (let x = 0; x <= W; x += step) {
             const y = wY
-              + Math.sin(x*l.freq + t*l.sp*3) * l.amp
-              + Math.sin(x*l.freq*0.5 + t*l.sp*1.7) * (l.amp*0.4)
+              + Math.sin(x * l.freq + t * l.sp * 3) * l.amp
+              + Math.sin(x * l.freq * 0.5 + t * l.sp * 1.7) * (l.amp * 0.4)
             x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
           }
           ctx.strokeStyle = `rgba(77,142,255,${l.a})`
@@ -184,7 +205,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       st.rafId = requestAnimationFrame(drawBgFrame)
     }
 
-    // ── Fill animation (clip-path both sides → center) ──────────
     function setFillProgress(p: number) {
       const pct  = Math.round((1 - p) * 50)
       const clip = `inset(0 ${pct}% 0 ${pct}%)`
@@ -192,7 +212,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       if (fillCadeteRef.current) fillCadeteRef.current.style.clipPath = clip
     }
 
-    // ── Glitch ──────────────────────────────────────────────────
     function glitchTick(intensity: number) {
       const ghosts = [ghostCaioRef.current, ghostCadeteRef.current]
       ghosts.forEach(g => {
@@ -208,7 +227,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       })
     }
 
-    // ── Particles contract + planet canvas zoom in ───────────────
     function triggerConstellation() {
       st.cState    = 'contracting'
       st.cProgress = 0
@@ -216,7 +234,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       if (!pCanvas) return
       const pc: HTMLCanvasElement = pCanvas
 
-      // Draw frame 0 on the shared planet canvas before fading it in
       const frame0 = new Image()
       frame0.crossOrigin = 'anonymous'
       frame0.src = `${BASE}${FRAMES[0]}.png`
@@ -244,7 +261,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         st.cProgress          = Math.min((now - contractStart) / contractDur, 1)
         st.constellationAlpha = 1 - st.cProgress
 
-        // planet canvas: opacity quadratic (starts slow), scale 1.3 → 1.0
         pc.style.opacity   = (st.cProgress * st.cProgress).toFixed(3)
         pc.style.transform = `scale(${(1.3 - st.cProgress * 0.3).toFixed(3)})`
 
@@ -260,18 +276,15 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       requestAnimationFrame(contractStep)
     }
 
-    // ── Text collapses to center with particles, hero reveals after ─
     function revealHero() {
       st.heroVisible = true
 
-      // Fade out subtitle
       const subtitle = subtitleRef.current
       if (subtitle) {
         subtitle.style.transition = 'opacity 0.35s ease'
         subtitle.style.opacity    = '0'
       }
 
-      // Hide base and ghost — only the white fill collapses
       ;[baseCaioRef, baseCadeteRef, ghostCaioRef, ghostCadeteRef].forEach(r => {
         if (r.current) r.current.style.opacity = '0'
       })
@@ -282,7 +295,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       const introEl:    HTMLDivElement = _introEl
       const introInner: HTMLDivElement = _introInner
 
-      // Collapse to center — same 900ms as particle contraction
       introInner.style.transformOrigin = '50% 50%'
       const dur   = 900
       const start = performance.now()
@@ -291,7 +303,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         const raw = Math.min((now - start) / dur, 1)
         const t   = easeInOutCubic(raw)
 
-        // Text shrinks into center point in sync with particles
         introInner.style.transform = `scale(${(1 - t).toFixed(4)})`
         introInner.style.opacity   = (1 - t).toFixed(4)
 
@@ -300,10 +311,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           return
         }
 
-        // Collapse done — hide intro overlay
         introEl.style.opacity = '0'
 
-        // Reveal hero content
         setTimeout(() => {
           heroRoleRef.current?.classList.add(styles.heroRoleShow)
           heroDividerRef.current?.classList.add(styles.heroDividerShow)
@@ -316,7 +325,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       requestAnimationFrame(collapseFrame)
     }
 
-    // ── Word-by-word body reveal ─────────────────────────────────
     function revealHeroText() {
       const sentence = "I'm a product designer and a musician in my spare time. I enjoy designing interfaces in the same way I compose music, with intention, rhythm, and harmony in every detail."
       const words    = sentence.split(' ')
@@ -332,7 +340,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         return sp
       })
 
-      // Unlock scroll and show corner name alongside the nav
       nameCornerRef.current?.classList.add(styles.nameCornerShow)
       onScrollReady()
 
@@ -347,7 +354,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       setTimeout(next, 300)
     }
 
-    // ── Full reset + run sequence ────────────────────────────────
     function run() {
       if (!mounted) return
       st.heroVisible          = false
@@ -362,7 +368,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       const bgEl     = bgCanvasRef.current
       if (!introEl || !bgEl) return
 
-      // Hard-reset styles before transition re-enable
       introEl.style.opacity    = '1'
       introEl.style.transform  = 'none'
       introEl.style.transition = 'none'
@@ -373,7 +378,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         introInnerRef.current.style.opacity         = ''
       }
 
-      // Restore fill layers text
       const fillItems = [
         { ref: fillCaioRef,   text: 'CAIO'   },
         { ref: fillCadeteRef, text: 'CADETE' },
@@ -384,19 +388,16 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         ref.current.style.clipPath = ''
       })
 
-      // Restore base + ghost visibility
       ;[baseCaioRef, baseCadeteRef, ghostCaioRef, ghostCadeteRef].forEach(r => {
         if (r.current) r.current.style.opacity = ''
       })
 
-      // Reset shared planet canvas to initial hidden state
       const pc = planetCanvasRef.current
       if (pc) {
         pc.style.opacity   = '0'
         pc.style.transform = 'scale(1.3)'
       }
 
-      // Remove show classes
       nameCornerRef.current?.classList.remove(styles.nameCornerShow)
       heroRoleRef.current?.classList.remove(styles.heroRoleShow)
       heroDividerRef.current?.classList.remove(styles.heroDividerShow)
@@ -404,14 +405,12 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       subtitleRef.current?.classList.remove(styles.subtitleShow)
       if (heroBodyRef.current) heroBodyRef.current.innerHTML = ''
 
-      // Reset ghosts
       ;[ghostCaioRef, ghostCadeteRef].forEach(r => {
         if (!r.current) return
         r.current.style.opacity   = '0'
         r.current.style.transform = ''
       })
 
-      // Enable transitions next frame
       requestAnimationFrame(() => {
         if (!mounted) return
         introEl.style.transition = ''
@@ -424,12 +423,10 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         st.timers.push(setTimeout(fn, ms))
       }
 
-      // Phase 1 — subtitle appears
       later(() => {
         subtitleRef.current?.classList.add(styles.subtitleShow)
       }, 500)
 
-      // Phase 2 — glitch pulses begin
       later(() => {
         let intensity = 0.1
         st.glitchIv = setInterval(() => {
@@ -438,7 +435,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         }, 150)
       }, 900)
 
-      // Phase 3 — liquid fill starts
       later(() => {
         if (st.glitchIv) { clearInterval(st.glitchIv); st.glitchIv = null }
         ;[ghostCaioRef, ghostCadeteRef].forEach(r => {
@@ -455,7 +451,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           if (p < 1) {
             requestAnimationFrame(fillStep)
           } else {
-            // Fill complete — brief pause, then suck + hero
             setTimeout(() => {
               triggerConstellation()
               revealHero()
@@ -466,7 +461,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       }, 2200)
     }
 
-    // ── Hero content scroll fade (first 20% of scroll progress) ──
     function onHeroScroll() {
       const wrap = document.getElementById('scroll-wrap')
       if (!wrap) return
@@ -478,7 +472,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       if (content) content.style.opacity = heroOpacity.toFixed(3)
     }
 
-    // ── Boot ────────────────────────────────────────────────────
     resize()
     st.rafId = requestAnimationFrame(drawBgFrame)
     window.addEventListener('resize', resize)

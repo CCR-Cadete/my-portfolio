@@ -110,6 +110,8 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     const ctx = canvas.getContext('2d')!
     aliveRef.current = true
     let particles: Particle[] = []
+    let cps: Particle[] = []   // constellation subset — cached to avoid per-frame filter
+    let lastFrame = 0
 
     function resize() {
       if (!canvas) return
@@ -121,8 +123,12 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     function initParticles() {
       if (!canvas) return
       const W = canvas.width, H = canvas.height
-      particles = Array.from({ length: 175 }, (_, i) => {
-        const isCon = i < 55
+      // Reduce particle count on mobile — still looks great, runs much faster
+      const isMobile = W <= 768
+      const TOTAL_P  = isMobile ? 60  : 175
+      const CON_P    = isMobile ? 0   : 55   // no constellation lines on mobile
+      particles = Array.from({ length: TOTAL_P }, (_, i) => {
+        const isCon = i < CON_P
         const ox    = Math.random()
         const oy    = Math.random()
         return {
@@ -138,10 +144,27 @@ export default function OmniControlPanel({ open, onClose }: Props) {
           isCon,
         }
       })
+      // Cache once — on mobile this is an empty array, skipping the O(n²) loop entirely
+      cps = particles.filter(p => p.isCon)
     }
 
     function draw(ts: number) {
       if (!aliveRef.current || !canvas) return
+
+      // Pause when the tab is not visible
+      if (document.hidden) {
+        rafRef.current = requestAnimationFrame(draw)
+        return
+      }
+
+      // Throttle to ~30 fps on mobile — imperceptible for a background effect
+      const isMobile = canvas.width <= 768
+      if (isMobile && ts - lastFrame < 33) {
+        rafRef.current = requestAnimationFrame(draw)
+        return
+      }
+      lastFrame = ts
+
       const W = canvas.width, H = canvas.height
       const t = ts * 0.001
       const mx = mouseRef.current.x
@@ -182,21 +205,25 @@ export default function OmniControlPanel({ open, onClose }: Props) {
         ctx.fill()
       })
 
-      // Constellation lines
-      const cps = particles.filter(p => p.isCon)
-      const maxDist = W * 0.16
-      for (let i = 0; i < cps.length; i++) {
-        for (let j = i + 1; j < cps.length; j++) {
-          const dx = cps[i].x - cps[j].x
-          const dy = cps[i].y - cps[j].y
-          const d  = Math.sqrt(dx * dx + dy * dy)
-          if (d < maxDist) {
-            ctx.beginPath()
-            ctx.moveTo(cps[i].x, cps[i].y)
-            ctx.lineTo(cps[j].x, cps[j].y)
-            ctx.strokeStyle = `rgba(255,255,255,${((1 - d / maxDist) * 0.18).toFixed(3)})`
-            ctx.lineWidth = 0.4
-            ctx.stroke()
+      // Constellation lines — cps is empty on mobile so this block never runs there.
+      // Use d² comparison to skip sqrt for the majority of pairs that are too far apart.
+      if (cps.length > 0) {
+        const maxDist  = W * 0.16
+        const maxDist2 = maxDist * maxDist
+        for (let i = 0; i < cps.length; i++) {
+          for (let j = i + 1; j < cps.length; j++) {
+            const dx = cps[i].x - cps[j].x
+            const dy = cps[i].y - cps[j].y
+            const d2 = dx * dx + dy * dy
+            if (d2 < maxDist2) {
+              const d = Math.sqrt(d2)
+              ctx.beginPath()
+              ctx.moveTo(cps[i].x, cps[i].y)
+              ctx.lineTo(cps[j].x, cps[j].y)
+              ctx.strokeStyle = `rgba(255,255,255,${((1 - d / maxDist) * 0.18).toFixed(3)})`
+              ctx.lineWidth = 0.4
+              ctx.stroke()
+            }
           }
         }
       }
@@ -277,15 +304,18 @@ export default function OmniControlPanel({ open, onClose }: Props) {
             <div className={`${styles.galleryLayout} ${styles.reveal}`}>
               <div className={styles.galleryMain}>
                 <div className={styles.screenFrame}>
-                  <video
-                    key={activeScreen}
-                    src={GALLERY[activeScreen].src}
-                    className={styles.screenVideo}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                  />
+                  {open && (
+                    <video
+                      key={activeScreen}
+                      src={GALLERY[activeScreen].src}
+                      className={styles.screenVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
+                    />
+                  )}
                 </div>
                 <p className={styles.screenCaption}>{GALLERY[activeScreen].label}</p>
               </div>

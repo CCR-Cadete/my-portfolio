@@ -13,6 +13,8 @@ export default function CustomCursor() {
   useEffect(() => {
     const el = cursorRef.current
     if (!el) return
+    // No custom cursor on touch/pointer-coarse devices — they have no mouse
+    if (window.matchMedia('(pointer: coarse)').matches) return
 
     function onMouseMove(e: MouseEvent) {
       target.current = { x: e.clientX, y: e.clientY }

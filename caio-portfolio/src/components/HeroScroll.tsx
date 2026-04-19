@@ -175,7 +175,7 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
       const p = maxY > 0 ? Math.min(1, window.scrollY / maxY) : 0
 
       draw(Math.min(Math.floor(p * TOTAL), TOTAL - 1))
-      preload(Math.floor(p * TOTAL), 40)
+      preload(Math.floor(p * TOTAL), 12)
 
       // ── Scroll words: letter-by-letter reveal, additive (no fade-out per word) ──
       const block = wordsBlockRef.current
@@ -221,7 +221,7 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
     }
 
     resize()
-    preload(0, 80)
+    preload(0, 20)
 
     const frame0 = cache[0]
     if (frame0?.complete && frame0.naturalWidth) {

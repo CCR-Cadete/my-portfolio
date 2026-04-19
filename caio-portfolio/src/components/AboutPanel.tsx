@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Spline from '@splinetool/react-spline'
 import styles from './AboutPanel.module.css'
 
@@ -8,34 +8,36 @@ interface Props {
 }
 
 interface Particle {
-  ox: number; oy: number   // fractional base position (0-1)
-  x:  number; y:  number   // pixel position
-  dx: number; dy: number   // fractional drift per frame
-  vx: number; vy: number   // extra velocity from mouse pull
+  ox: number; oy: number
+  x:  number; y:  number
+  dx: number; dy: number
+  vx: number; vy: number
   r:  number; a:  number
-  ph: number; sp: number   // twinkle phase & speed
-  isCon: boolean           // constellation particle (brighter, draws lines)
+  ph: number; sp: number
+  isCon: boolean
 }
 
 export default function AboutPanel({ open, onClose }: Props) {
   const canvasRef  = useRef<HTMLCanvasElement>(null)
   const mouseRef   = useRef({ x: -9999, y: -9999 })
   const rafRef     = useRef(0)
-  // Refs that persist across the open/close cycle so cleanup can be deferred
   const aliveRef   = useRef(false)
   const stopRef    = useRef<() => void>(() => {})
+  // Spline is mounted on first open and kept in the DOM — avoids reloading the scene
+  const [splineReady, setSplineReady] = useState(false)
 
-  // On unmount: stop immediately regardless
+  useEffect(() => {
+    if (open && !splineReady) setSplineReady(true)
+  }, [open, splineReady])
+
   useEffect(() => () => stopRef.current(), [])
 
   useEffect(() => {
     if (!open) {
-      // Delay teardown until AFTER the 0.5 s CSS fade-out finishes
       const t = setTimeout(() => stopRef.current(), 600)
       return () => clearTimeout(t)
     }
 
-    // Opening: tear down any previous run first
     stopRef.current()
 
     const canvas = canvasRef.current
@@ -44,6 +46,8 @@ export default function AboutPanel({ open, onClose }: Props) {
 
     aliveRef.current = true
     let particles: Particle[] = []
+    let cps: Particle[] = []   // constellation subset — cached to avoid per-frame filter
+    let lastFrame = 0
 
     function resize() {
       if (!canvas) return
@@ -54,20 +58,21 @@ export default function AboutPanel({ open, onClose }: Props) {
 
     function initParticles() {
       if (!canvas) return
-      const W = canvas.width
-      const H = canvas.height
-      particles = Array.from({ length: 175 }, (_, i) => {
-        const isCon = i < 55
+      const W = canvas.width, H = canvas.height
+      // Reduce particle count on mobile — still looks great, runs much faster
+      const isMobile = W <= 768
+      const TOTAL_P  = isMobile ? 60  : 175
+      const CON_P    = isMobile ? 0   : 55   // no constellation lines on mobile
+      particles = Array.from({ length: TOTAL_P }, (_, i) => {
+        const isCon = i < CON_P
         const ox    = Math.random()
         const oy    = Math.random()
         return {
           ox, oy,
-          x:  ox * W,
-          y:  oy * H,
+          x: ox * W, y: oy * H,
           dx: (Math.random() - 0.5) * 0.00018,
           dy: (Math.random() - 0.5) * 0.00018,
-          vx: 0,
-          vy: 0,
+          vx: 0, vy: 0,
           r:  isCon ? 0.8 + Math.random() * 1.8 : 0.3 + Math.random() * 1.1,
           a:  isCon ? 0.3  + Math.random() * 0.55 : 0.15 + Math.random() * 0.5,
           ph: Math.random() * Math.PI * 2,
@@ -75,30 +80,43 @@ export default function AboutPanel({ open, onClose }: Props) {
           isCon,
         }
       })
+      // Cache once — on mobile this is an empty array, skipping the O(n²) loop entirely
+      cps = particles.filter(p => p.isCon)
     }
 
     function draw(ts: number) {
       if (!aliveRef.current || !canvas) return
-      const W = canvas.width
-      const H = canvas.height
+
+      // Pause when the tab is not visible
+      if (document.hidden) {
+        rafRef.current = requestAnimationFrame(draw)
+        return
+      }
+
+      // Throttle to ~30 fps on mobile — imperceptible for a background effect
+      const isMobile = canvas.width <= 768
+      if (isMobile && ts - lastFrame < 33) {
+        rafRef.current = requestAnimationFrame(draw)
+        return
+      }
+      lastFrame = ts
+
+      const W = canvas.width, H = canvas.height
       const t = ts * 0.001
       const mx = mouseRef.current.x
       const my = mouseRef.current.y
 
-      // Fill background in draw loop — canvas element itself stays transparent
       ctx.fillStyle = '#05090f'
       ctx.fillRect(0, 0, W, H)
 
-      const ATTRACT_R = 200   // px radius around cursor
-      const ATTRACT_F = 0.012 // force multiplier
-      const DAMPING   = 0.88  // velocity damping per frame
+      const ATTRACT_R = 200
+      const ATTRACT_F = 0.012
+      const DAMPING   = 0.88
 
       particles.forEach(p => {
-        // Ambient drift (fractional coords, same approach as intro)
         p.ox = Math.max(0.005, Math.min(0.995, p.ox + p.dx))
         p.oy = Math.max(0.005, Math.min(0.995, p.oy + p.dy))
 
-        // Mouse attraction — all particles respond, constellation ones more so
         if (mx > -100) {
           const tdx  = mx - p.x
           const tdy  = my - p.y
@@ -110,38 +128,38 @@ export default function AboutPanel({ open, onClose }: Props) {
           }
         }
 
-        // Damp extra velocity so particles settle back after cursor leaves
         p.vx *= DAMPING
         p.vy *= DAMPING
-
         p.x = p.ox * W + p.vx
         p.y = p.oy * H + p.vy
 
-        // Twinkle
         const twinkle = 0.4 + 0.6 * Math.sin(t * p.sp + p.ph)
         const alpha   = p.a * twinkle
-
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`
         ctx.fill()
       })
 
-      // Constellation lines — only between brighter particles, tight radius
-      const cps     = particles.filter(p => p.isCon)
-      const maxDist = W * 0.16
-      for (let i = 0; i < cps.length; i++) {
-        for (let j = i + 1; j < cps.length; j++) {
-          const dx = cps[i].x - cps[j].x
-          const dy = cps[i].y - cps[j].y
-          const d  = Math.sqrt(dx * dx + dy * dy)
-          if (d < maxDist) {
-            ctx.beginPath()
-            ctx.moveTo(cps[i].x, cps[i].y)
-            ctx.lineTo(cps[j].x, cps[j].y)
-            ctx.strokeStyle = `rgba(255,255,255,${((1 - d / maxDist) * 0.18).toFixed(3)})`
-            ctx.lineWidth = 0.4
-            ctx.stroke()
+      // Constellation lines — cps is empty on mobile so this block never runs there.
+      // Use d² comparison to skip sqrt for the majority of pairs that are too far apart.
+      if (cps.length > 0) {
+        const maxDist  = W * 0.16
+        const maxDist2 = maxDist * maxDist
+        for (let i = 0; i < cps.length; i++) {
+          for (let j = i + 1; j < cps.length; j++) {
+            const dx = cps[i].x - cps[j].x
+            const dy = cps[i].y - cps[j].y
+            const d2 = dx * dx + dy * dy
+            if (d2 < maxDist2) {
+              const d = Math.sqrt(d2)
+              ctx.beginPath()
+              ctx.moveTo(cps[i].x, cps[i].y)
+              ctx.lineTo(cps[j].x, cps[j].y)
+              ctx.strokeStyle = `rgba(255,255,255,${((1 - d / maxDist) * 0.18).toFixed(3)})`
+              ctx.lineWidth = 0.4
+              ctx.stroke()
+            }
           }
         }
       }
@@ -153,7 +171,6 @@ export default function AboutPanel({ open, onClose }: Props) {
       mouseRef.current = { x: e.clientX, y: e.clientY }
     }
 
-    // Register the stop function so the close-delay and unmount handlers can call it
     stopRef.current = () => {
       aliveRef.current = false
       cancelAnimationFrame(rafRef.current)
@@ -167,7 +184,6 @@ export default function AboutPanel({ open, onClose }: Props) {
     window.addEventListener('mousemove', onMouseMove)
     rafRef.current = requestAnimationFrame(draw)
 
-    // No inline cleanup — the if(!open) branch above handles teardown after fade
     return () => {}
   }, [open])
 
@@ -176,7 +192,6 @@ export default function AboutPanel({ open, onClose }: Props) {
       <canvas ref={canvasRef} className={styles.canvas} />
 
       <div className={styles.panel}>
-        {/* Close button */}
         <button className={styles.closeBtn} onClick={onClose} aria-label="Close about panel">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <line x1="1" y1="1" x2="17" y2="17" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round"/>
@@ -185,11 +200,13 @@ export default function AboutPanel({ open, onClose }: Props) {
         </button>
 
         <div className={styles.container}>
-          {/* Left — Spline 3D */}
+          {/* Left — Spline 3D: mounted on first open, stays mounted to avoid scene reload */}
           <div className={styles.photoWrap}>
             <div className={styles.photoCircle}>
               <div className={styles.splineScaler}>
-                <Spline scene="https://prod.spline.design/49Hes-ELkjWJ1uZd/scene.splinecode" />
+                {splineReady && (
+                  <Spline scene="https://prod.spline.design/49Hes-ELkjWJ1uZd/scene.splinecode" />
+                )}
               </div>
             </div>
           </div>
