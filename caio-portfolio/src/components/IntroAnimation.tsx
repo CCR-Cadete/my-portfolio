@@ -521,10 +521,12 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         </div>
       </div>
 
+      {/* nameCorner sits in its own fixed layer above the works section */}
+      <div ref={nameCornerRef} className={styles.nameCorner}>
+        CAIO<br />CADETE
+      </div>
+
       <div ref={heroRef} className={styles.hero}>
-        <div ref={nameCornerRef} className={styles.nameCorner}>
-          CAIO<br />CADETE
-        </div>
         <div ref={heroContentRef} className={styles.heroContent}>
           <div ref={heroRoleRef}    className={styles.heroRole}>Product &amp; Interactive Designer</div>
           <div ref={heroDividerRef} className={styles.heroDivider} />

@@ -37,3 +37,119 @@
 .linkActive:hover {
   color: #4D8EFF;
 }
+
+/* ── Hamburger button — hidden on desktop ── */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  padding: 6px;
+  line-height: 0;
+  cursor: pointer;
+}
+
+/* ── Mobile full-screen menu — hidden by default ── */
+.mobileMenu {
+  display: none;
+}
+
+/* ── Mobile breakpoint ── */
+@media (max-width: 768px) {
+  .nav {
+    top: 24px;
+    right: 24px;
+    gap: 0;
+    align-items: center;
+  }
+
+  /* Hide desktop links */
+  .link {
+    display: none;
+  }
+
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mobile overlay menu */
+  .mobileMenu {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 7, 15, 0.97);
+    z-index: 49;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobileMenuOpen {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Hide the hamburger when the mobile menu is open */
+  .navMenuOpen .hamburger {
+    display: none;
+  }
+
+  /* Logo — identical position and style to the hero nameCorner (mobile override) */
+  .mobileMenuLogo {
+    position: absolute;
+    top: 14px;
+    left: 36px;
+    display: flex;
+    flex-direction: column;
+    line-height: 0.9;
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 100;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* X button — same corner and vertical position as the hamburger */
+  .mobileMenuClose {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    line-height: 0;
+  }
+
+  /* Links — start below the logo (14px top + 47px logo height + 24px gap) */
+  .mobileMenuLinks {
+    position: absolute;
+    top: 85px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 28px;
+    gap: 4px;
+  }
+
+  .mobileLink {
+    font-family: 'Syne', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    padding: 10px 0;
+    transition: color 0.2s ease;
+  }
+
+  .mobileLink:hover {
+    color: #4D8EFF;
+  }
+}

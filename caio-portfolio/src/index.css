@@ -31,6 +31,13 @@ body {
   background: #7aaaff;
 }
 
+/* Restore native cursor on touch devices (custom cursor is mouse-only) */
+@media (pointer: coarse) {
+  *, *::before, *::after {
+    cursor: auto !important;
+  }
+}
+
 #root {
   width: 100%;
   max-width: 100vw;

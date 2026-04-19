@@ -235,3 +235,83 @@
   margin: 6px 36px 0;
   flex-shrink: 0;
 }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .closeBtn {
+    top: 24px;
+    right: 24px;
+    padding: 6px;
+  }
+
+  .panel {
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding: 80px 24px 48px;
+  }
+
+  .container {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    gap: 32px;
+  }
+
+  /* Image first */
+  .photoWrap {
+    width: 100%;
+    order: -1;
+  }
+
+  .photoCircle {
+    width: 220px;
+    height: 220px;
+    margin: 0 auto;
+  }
+
+  /* Text below */
+  .content {
+    order: 1;
+  }
+
+  .header {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .bio p {
+    font-size: 13px;
+  }
+
+  .stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .stat {
+    align-items: flex-start;
+    flex: none;
+    width: 100%;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .stat:last-child {
+    border-bottom: none;
+  }
+
+  .statRule {
+    display: none;
+  }
+
+  .statLabel {
+    font-size: 22px;
+  }
+
+  .statDesc {
+    text-align: left;
+    font-size: 11px;
+  }
+}

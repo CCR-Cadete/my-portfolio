@@ -296,7 +296,8 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
       </div>
 
       <div id="works-section" ref={worksRef} className={styles.works}>
-        <div>
+        {/* Desktop: vertical list */}
+        <div className={styles.desktopList}>
           {projects.map((p, i) => {
             const active = activeProject === p.id
             return (
@@ -324,13 +325,30 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
           })}
         </div>
 
-        {/* Cover image lives inside works so it fades in/out with the parent opacity */}
+        {/* Desktop: cover image */}
         <img
           key={activeProject}
           src={activeImage}
           alt={activeProject}
           className={styles.workCover}
         />
+
+        {/* Mobile: horizontal scrolling cards */}
+        <div className={styles.mobileCards}>
+          {projects.map(p => (
+            <div
+              key={p.id}
+              className={styles.mobileCard}
+              onClick={() => onProjectClick?.(p.id)}
+            >
+              <img src={p.image} alt={p.title} className={styles.mobileCardImg} />
+              <div className={styles.mobileCardInfo}>
+                <span className={styles.mobileCardTitle}>{p.title}</span>
+                <span className={styles.mobileCardSub}>{p.subtitle}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   )

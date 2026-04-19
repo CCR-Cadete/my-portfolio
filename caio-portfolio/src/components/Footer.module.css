@@ -97,3 +97,64 @@
   line-height: normal;
   white-space: nowrap;
 }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    padding: 48px 24px;
+    min-height: auto;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  /* Lift .left's children into the footer flex container so we can reorder them */
+  .left {
+    display: contents;
+  }
+
+  /* 1 — Heading */
+  .introSection {
+    order: 1;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+
+  /* Body text hidden */
+  .body {
+    display: none;
+  }
+
+  /* Vertical divider hidden */
+  .divider {
+    display: none;
+  }
+
+  /* 2 — Social icons (before copyright) */
+  .contactSection {
+    order: 2;
+    flex-direction: row;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .socialName {
+    display: none;
+  }
+
+  .socialIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* 3 — Copyright (last) */
+  .copyright {
+    order: 3;
+    font-size: 12px;
+  }
+}

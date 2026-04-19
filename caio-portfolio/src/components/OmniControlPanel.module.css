@@ -617,3 +617,136 @@
 .dotActive {
   background: #4D8EFF;
 }
+
+/* ──────────────────────────────────────────────────
+   Mobile
+────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Reduce page padding */
+  .page {
+    padding: 0 20px 80px;
+  }
+
+  /* Close button — same position as burger menu X */
+  .closeBtn {
+    top: 24px;
+    right: 24px;
+    padding: 6px;
+  }
+
+  /* Hero top margin */
+  .heroSection {
+    margin-top: 60px;
+  }
+
+  /* Smaller project title */
+  .projectTitle {
+    font-size: clamp(28px, 9vw, 36px);
+  }
+
+  /* Meta items stack vertically */
+  .meta {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Gallery: stack nav below the screen */
+  .galleryLayout {
+    flex-direction: column;
+  }
+
+  .galleryNav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* Challenge cards: single column, no box styling */
+  .cardGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .card {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 0;
+    padding: 20px 0;
+  }
+
+  .card:last-child {
+    border-bottom: none;
+  }
+
+  /* Insights quotes: single column, no box styling */
+  .quoteGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .quoteCard {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 0;
+    padding: 20px 0;
+  }
+
+  .quoteCard:last-child {
+    border-bottom: none;
+  }
+
+  /* Solution: stack vertically */
+  .solutionSection {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Impact stats: single column, no box */
+  .statsGrid {
+    grid-template-columns: 1fr;
+    background: transparent;
+    border: none;
+    gap: 0;
+  }
+
+  .statCard {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 0;
+    padding: 24px 0;
+  }
+
+  .statCard:last-child {
+    border-bottom: none;
+  }
+
+  /* Smaller "Next" display title */
+  .nextTitle {
+    font-size: clamp(32px, 10vw, 40px);
+  }
+
+  /* Overview section less padding */
+  .overviewSection {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  /* Generic sections less padding */
+  .section {
+    padding: 40px 0;
+  }
+
+  .gallerySection {
+    padding: 40px 0;
+  }
+
+  .solutionSection {
+    padding: 40px 0;
+  }
+
+  .nextSection {
+    padding: 48px 0 32px;
+  }
+}

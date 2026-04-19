@@ -132,3 +132,100 @@
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* Hidden on desktop, shown only in mobile media query */
+.mobileCards {
+  display: none;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  /* Much smaller scroll text */
+  .wordSpan {
+    font-size: 18px;
+  }
+
+  .wordsRow {
+    gap: 8px;
+  }
+
+  .wordsBlock {
+    gap: 10px;
+  }
+
+  /* Works container: push content below the logo so cards can never scroll into it */
+  .works {
+    padding: 0;
+    padding-top: 80px;   /* clears logo (top 14px + ~47px height + buffer) */
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* Hide desktop vertical list */
+  .desktopList {
+    display: none;
+  }
+
+  /* Hide desktop cover */
+  .workCover {
+    display: none;
+  }
+
+  /* ── Mobile vertical card stack — centred ── */
+  .mobileCards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    /* use only the height below the reserved top area */
+    max-height: calc(100vh - 80px);
+    gap: 20px;
+    padding: 0 0 24px;
+    width: 100%;
+    scrollbar-width: none;
+  }
+
+  .mobileCards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobileCard {
+    width: 82vw;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobileCardImg {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .mobileCardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobileCardTitle {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  .mobileCardSub {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: rgba(255, 255, 255, 0.45);
+  }
+}
