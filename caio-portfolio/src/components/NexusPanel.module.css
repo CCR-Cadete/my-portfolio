@@ -34,7 +34,10 @@
   transition: opacity 0.2s ease;
   z-index: 110;
 }
-.closeBtn:hover { opacity: 1; }
+
+.closeBtn:hover {
+  opacity: 1;
+}
 
 /* ── Scrollable wrapper ── */
 .scroll {
@@ -51,21 +54,27 @@
 .scroll::-webkit-scrollbar-thumb  { background: #4D8EFF; border-radius: 3px; }
 .scroll::-webkit-scrollbar-thumb:hover { background: #7aaaff; }
 
-/* ── Page ── */
+/* ── Page slide-in ── */
 .page {
   max-width: 860px;
   margin: 0 auto;
   padding: 0 40px 120px;
 }
-.pageIn { opacity: 1; }
+
+.pageIn {
+  opacity: 1;
+}
 
 /* ── Scroll-reveal ── */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
+  filter: blur(0px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .revealTitle {
   opacity: 0;
   transform: translateX(-20px);
@@ -74,6 +83,7 @@
               transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
               filter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .revealStat {
   opacity: 0;
   transform: translateY(44px) scale(0.68);
@@ -82,11 +92,16 @@
               transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
               filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .revealSubtle {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 1s ease, transform 1s ease;
+  filter: blur(0px);
+  transition: opacity 1s ease,
+              transform 1s ease,
+              filter 1s ease;
 }
+
 .revealed {
   opacity: 1 !important;
   transform: none !important;
@@ -102,6 +117,7 @@
   border-radius: 8px;
   overflow: hidden;
 }
+
 .heroImg {
   width: 100%;
   height: auto;
@@ -116,6 +132,7 @@
   padding-bottom: 64px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+
 .projectTitle {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
@@ -125,6 +142,7 @@
   line-height: 0.9;
   margin: 0 0 12px;
 }
+
 .projectSub {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 13px;
@@ -133,6 +151,7 @@
   color: rgba(255,255,255,0.4);
   margin: 0 0 28px;
 }
+
 .tag {
   display: inline-block;
   font-family: 'Space Grotesk', sans-serif;
@@ -145,21 +164,26 @@
   padding: 5px 10px;
   margin-bottom: 40px;
 }
+
 .rule {
   height: 1px;
   background: rgba(255,255,255,0.08);
   margin-bottom: 36px;
 }
+
 .meta {
   display: flex;
   gap: 60px;
   flex-wrap: wrap;
+  margin-bottom: 40px;
 }
+
 .metaItem {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .metaLabel {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
@@ -167,6 +191,7 @@
   letter-spacing: 0.2em;
   color: rgba(255,255,255,0.3);
 }
+
 .metaValue {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 13px;
@@ -174,139 +199,7 @@
   color: rgba(255,255,255,0.8);
 }
 
-/* ──────────────────────────────────────────────────
-   Generic section
-────────────────────────────────────────────────── */
-.section {
-  padding: 64px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.sectionTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #4D8EFF;
-  margin: 0 0 32px;
-}
-.sectionLead {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.55);
-  margin: 0 0 40px;
-}
-
-/* ──────────────────────────────────────────────────
-   3 · Challenge
-────────────────────────────────────────────────── */
-.bodyText {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
-}
-.bodyText p {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.55);
-  margin: 0;
-}
-.pullQuote {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px !important;
-  font-weight: 400 !important;
-  font-style: italic;
-  line-height: 1.65 !important;
-  color: rgba(255,255,255,0.75) !important;
-  border-left: 2px solid #4D8EFF;
-  padding-left: 20px;
-  margin: 8px 0 !important;
-}
-.cardGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-.card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 6px;
-  padding: 24px;
-}
-.cardTitle {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  margin: 0 0 10px;
-}
-.cardBody {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.45);
-  margin: 0;
-}
-
-/* ──────────────────────────────────────────────────
-   4 · Insights
-────────────────────────────────────────────────── */
-.quoteGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-}
-
-.quoteCard {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 6px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.quoteIcon {
-  font-family: 'Big Shoulders Display', sans-serif;
-  font-size: 40px;
-  line-height: 1;
-  color: #4D8EFF;
-  opacity: 0.5;
-}
-
-.quoteText {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.6);
-  margin: 0;
-  flex: 1;
-}
-
-.quoteAuthor {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.3);
-}
-
-.insightsBody {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 40px;
-}
-
-.insightsBody p {
+.overviewBody {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -315,172 +208,25 @@
   margin: 0;
 }
 
-.insightsBody strong {
-  font-weight: 500;
-  color: rgba(255,255,255,0.8);
-}
-
 /* ──────────────────────────────────────────────────
-   5 · Solution
-────────────────────────────────────────────────── */
-.solutionSection {
-  padding: 64px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: start;
-}
-.solutionText {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.solutionText p {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.55);
-  margin: 0;
-}
-.solutionSteps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.solutionStep {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.solutionStep:last-child { border-bottom: none; }
-.stepNum {
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: #4D8EFF;
-  padding-top: 2px;
-  flex-shrink: 0;
-  width: 24px;
-}
-.stepTitle {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  margin: 0 0 6px;
-}
-.stepBody {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.65;
-  color: rgba(255,255,255,0.45);
-  margin: 0;
-}
-
-/* ──────────────────────────────────────────────────
-   6 · Impact & Outcomes
-────────────────────────────────────────────────── */
-.statsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.statCard {
-  background: rgba(255,255,255,0.02);
-  padding: 36px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.statNum {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: clamp(40px, 5vw, 64px);
-  letter-spacing: 0.02em;
-  color: #4D8EFF;
-  line-height: 1;
-}
-.statLabel {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.8);
-}
-.statDesc {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 1.65;
-  color: rgba(255,255,255,0.35);
-  margin: 0;
-}
-
-/* ──────────────────────────────────────────────────
-   7 · Key Learnings
-────────────────────────────────────────────────── */
-.learningsGrid {
-  display: flex;
-  flex-direction: column;
-}
-.learning {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 24px;
-  row-gap: 8px;
-  padding: 32px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.learning:last-child { border-bottom: none; }
-.learningNum {
-  grid-row: 1 / 3;
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.2);
-  padding-top: 3px;
-}
-.learningTitle {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  margin: 0;
-}
-.learningBody {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.75;
-  color: rgba(255,255,255,0.45);
-  margin: 0;
-}
-
-/* ──────────────────────────────────────────────────
-   8 · Screens (Gallery)
+   3 · Gallery
 ────────────────────────────────────────────────── */
 .gallerySection {
   padding: 64px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+
 .galleryLayout {
   display: flex;
   gap: 32px;
   align-items: flex-start;
 }
+
 .galleryMain {
   flex: 1;
   min-width: 0;
 }
+
 .screenFrame {
   width: 100%;
   aspect-ratio: 16/9;
@@ -489,13 +235,7 @@
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
 }
-.screenImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: 12px;
-}
+
 .screenVideo {
   width: 100%;
   height: 100%;
@@ -503,6 +243,7 @@
   display: block;
   border-radius: 12px;
 }
+
 .screenCaption {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
@@ -511,12 +252,14 @@
   color: rgba(255,255,255,0.35);
   margin: 14px 0 0;
 }
+
 .galleryNav {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding-top: 4px;
 }
+
 .navBtn {
   font-family: 'Syne Mono', monospace;
   font-size: 11px;
@@ -530,10 +273,12 @@
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   white-space: nowrap;
 }
+
 .navBtn:hover {
   color: rgba(255,255,255,0.7);
   border-color: rgba(255,255,255,0.2);
 }
+
 .navBtnActive {
   color: #4D8EFF;
   border-color: rgba(77,142,255,0.4);
@@ -541,44 +286,429 @@
 }
 
 /* ──────────────────────────────────────────────────
-   9 · Beyond the MVP
+   Generic section
 ────────────────────────────────────────────────── */
-.nextStepsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 40px;
+.section {
+  padding: 64px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.nextStep {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 6px;
-  padding: 24px;
+
+.sectionTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #4D8EFF;
+  margin: 0 0 16px;
 }
-.nextStepTitle {
+
+.sectionLead {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  margin: 0 0 10px;
-}
-.nextStepDesc {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.45);
-  margin: 0;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.55);
+  margin: 0 0 40px;
 }
-.closingQuote {
+
+/* Sub-headline for problem / section titles */
+.problemHeadline {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 3.5vw, 28px);
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.9);
+  margin: 0 0 20px;
+}
+
+.pullQuote {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 15px;
   font-weight: 400;
   font-style: italic;
   line-height: 1.65;
-  color: rgba(255,255,255,0.55);
-  border-left: 2px solid rgba(77,142,255,0.4);
+  color: rgba(255,255,255,0.75);
+  border-left: 2px solid #4D8EFF;
   padding-left: 20px;
+  margin: 32px 0 0;
+}
+
+/* ──────────────────────────────────────────────────
+   3 · Stats (The Problem)
+────────────────────────────────────────────────── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.statCard {
+  background: rgba(255,255,255,0.02);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statNum {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: 0.02em;
+  color: #4D8EFF;
+  line-height: 1;
+}
+
+.statLabel {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+}
+
+.statDesc {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────
+   5 · User Insights — two persona cards
+────────────────────────────────────────────────── */
+.insightGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.insightCard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.insightCardHeader {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* reused by insightCard too */
+.personaHeader {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.personaAvatar {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(77,142,255,0.15);
+  border: 1px solid rgba(77,142,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.personaInitials {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: #4D8EFF;
+}
+
+.personaName {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  margin: 0 0 4px;
+}
+
+.personaRole {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35);
+  margin: 0 0 14px;
+}
+
+.personaQuote {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.6);
+  margin: 0;
+}
+
+.insightPains {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 16px;
+}
+
+.insightPainItem {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.45);
+  padding-left: 14px;
+  position: relative;
+}
+
+.insightPainItem::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: #4D8EFF;
+  font-weight: 700;
+}
+
+/* ──────────────────────────────────────────────────
+   5 · Solution
+────────────────────────────────────────────────── */
+.solutionSection {
+  padding: 64px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.solutionText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.solutionText p {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+.solutionItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.solutionItem {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-items: flex-start;
+}
+
+.solutionItem:last-child {
+  border-bottom: none;
+}
+
+.solutionNum {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #4D8EFF;
+  flex-shrink: 0;
+  padding-top: 2px;
+  min-width: 28px;
+}
+
+.solutionItemTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  margin: 0 0 6px;
+}
+
+.solutionItemBody {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────
+   7 · Vibe Coding — Process steps
+────────────────────────────────────────────────── */
+.processSteps {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.processStep {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.processNum {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.2);
+}
+
+.processTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  margin: 0;
+}
+
+.processBody {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+
+.processArrow {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: rgba(77,142,255,0.45);
+  padding: 0 12px;
+  /* align vertically with the title line (num ~16px + 6px gap) */
+  padding-top: 22px;
+  line-height: 1;
+}
+
+/* ──────────────────────────────────────────────────
+   8 · Learnings — 3 columns
+────────────────────────────────────────────────── */
+.learnings3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.learningBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.learningAccent {
+  height: 3px;
+  border-radius: 2px;
+}
+
+.learningAccentGreen {
+  background: #3dd68c;
+}
+
+.learningAccentAmber {
+  background: #f5a623;
+}
+
+.learningAccentBlue {
+  background: #4D8EFF;
+}
+
+.learningBlockTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  margin: 0;
+}
+
+.learningList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.learningListItem {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.45);
+  padding-left: 14px;
+  position: relative;
+}
+
+.learningListItem::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: rgba(255,255,255,0.25);
+}
+
+/* ──────────────────────────────────────────────────
+   9 · Closing CTA
+────────────────────────────────────────────────── */
+.closingSection {
+  padding: 80px 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.closingTitle {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(24px, 4vw, 36px);
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  color: rgba(255,255,255,0.9);
+  margin: 0 0 40px;
+  max-width: 640px;
+}
+
+.closingRule {
+  width: 80px;
+  height: 2px;
+  background: rgba(255,255,255,0.12);
+  margin-bottom: 20px;
+}
+
+.closingByline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.25);
   margin: 0;
 }
 
@@ -593,6 +723,7 @@
   text-align: center;
   gap: 12px;
 }
+
 .nextLabel {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
@@ -600,6 +731,7 @@
   letter-spacing: 0.24em;
   color: rgba(255,255,255,0.3);
 }
+
 .nextTitle {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
@@ -609,6 +741,7 @@
   line-height: 0.9;
   margin: 0;
 }
+
 .nextSub {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 12px;
@@ -617,6 +750,7 @@
   color: rgba(255,255,255,0.35);
   margin: 0;
 }
+
 .nextBtn {
   margin-top: 12px;
   background: none;
@@ -631,92 +765,148 @@
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
+
 .nextBtn:hover {
   border-color: rgba(255,255,255,0.5);
   color: #ffffff;
 }
+
 .dots {
   display: flex;
   gap: 8px;
   margin-top: 16px;
 }
+
 .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: rgba(255,255,255,0.15);
 }
-.dotActive { background: #4D8EFF; }
+
+.dotActive {
+  background: #4D8EFF;
+}
 
 /* ──────────────────────────────────────────────────
    Mobile
 ────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .page { padding: 0 20px 80px; }
+  .page {
+    padding: 0 20px 80px;
+  }
 
-  .closeBtn { top: 24px; right: 24px; padding: 6px; }
+  .closeBtn {
+    top: 24px;
+    right: 24px;
+    padding: 6px;
+  }
 
-  .heroSection { margin-top: 60px; }
+  .heroSection {
+    margin-top: 60px;
+  }
 
-  .projectTitle { font-size: clamp(28px, 9vw, 36px); }
+  .projectTitle {
+    font-size: clamp(28px, 9vw, 36px);
+  }
 
-  .meta { flex-direction: column; gap: 20px; }
+  .meta {
+    flex-direction: column;
+    gap: 20px;
+  }
 
-  /* Challenge */
-  .cardGrid { grid-template-columns: 1fr; gap: 0; }
-  .card {
+  .galleryLayout {
+    flex-direction: column;
+  }
+
+  .galleryNav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* Stats: single column */
+  .statsGrid {
+    grid-template-columns: 1fr;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    border-radius: 0;
-    padding: 20px 0;
+    gap: 0;
   }
-  .card:last-child { border-bottom: none; }
 
-  /* Insights quotes: single column, no box styling */
-  .quoteGrid { grid-template-columns: 1fr; gap: 0; }
-  .quoteCard {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    border-radius: 0;
-    padding: 20px 0;
-  }
-  .quoteCard:last-child { border-bottom: none; }
-
-  /* Solution */
-  .solutionSection { grid-template-columns: 1fr; gap: 32px; padding: 40px 0; }
-
-  /* Stats */
-  .statsGrid { grid-template-columns: 1fr; background: transparent; border: none; gap: 0; }
   .statCard {
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 0;
     padding: 24px 0;
   }
-  .statCard:last-child { border-bottom: none; }
 
-  /* Gallery */
-  .gallerySection { padding: 40px 0; }
-  .galleryLayout { flex-direction: column; }
-  .galleryNav { flex-direction: row; flex-wrap: wrap; }
-
-  /* Beyond the MVP */
-  .nextStepsGrid { grid-template-columns: 1fr; gap: 0; }
-  .nextStep {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    border-radius: 0;
-    padding: 20px 0;
+  .statCard:last-child {
+    border-bottom: none;
   }
-  .nextStep:last-child { border-bottom: none; }
 
-  /* Sections */
-  .section { padding: 40px 0; }
-  .overviewSection { padding-top: 40px; padding-bottom: 40px; }
-  .nextSection { padding: 48px 0 32px; }
-  .nextTitle { font-size: clamp(32px, 10vw, 40px); }
+  /* Insight cards: stack vertically */
+  .insightGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Solution: single column */
+  .solutionSection {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Process steps: stack vertically */
+  .processSteps {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .processArrow {
+    display: none;
+  }
+
+  .processStep {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .processStep:last-child {
+    border-bottom: none;
+  }
+
+  /* Learnings: single column */
+  .learnings3 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Next title */
+  .nextTitle {
+    font-size: clamp(32px, 10vw, 40px);
+  }
+
+  /* Section padding */
+  .overviewSection {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .section {
+    padding: 40px 0;
+  }
+
+  .gallerySection {
+    padding: 40px 0;
+  }
+
+  .solutionSection {
+    padding: 40px 0;
+  }
+
+  .nextSection {
+    padding: 48px 0 32px;
+  }
+
+  .closingSection {
+    padding: 40px 0;
+  }
 }

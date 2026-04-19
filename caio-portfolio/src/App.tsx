@@ -6,6 +6,8 @@ import Nav from './components/Nav'
 import AboutPanel from './components/AboutPanel'
 import OmniControlPanel from './components/OmniControlPanel'
 import DepthPanel from './components/DepthPanel'
+import NexusPanel from './components/NexusPanel'
+import KinesisPanel from './components/KinesisPanel'
 import CustomCursor from './components/CustomCursor'
 
 export default function App() {
@@ -14,6 +16,8 @@ export default function App() {
   const [aboutOpen, setAboutOpen] = useState(false)
   const [omniOpen, setOmniOpen] = useState(false)
   const [depthOpen, setDepthOpen] = useState(false)
+  const [nexusOpen, setNexusOpen] = useState(false)
+  const [kinesisOpen, setKinesisOpen] = useState(false)
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -52,6 +56,8 @@ export default function App() {
         onProjectClick={(id) => {
           if (id === 'omnicontrol') setOmniOpen(true)
           if (id === 'depth')       setDepthOpen(true)
+          if (id === 'nexus')       setNexusOpen(true)
+          if (id === 'kinesis')     setKinesisOpen(true)
         }}
       />
 
@@ -69,6 +75,12 @@ export default function App() {
 
       {/* Depth case study panel */}
       <DepthPanel open={depthOpen} onClose={() => setDepthOpen(false)} />
+
+      {/* Nexus case study panel */}
+      <NexusPanel open={nexusOpen} onClose={() => setNexusOpen(false)} />
+
+      {/* Kinesis case study panel */}
+      <KinesisPanel open={kinesisOpen} onClose={() => setKinesisOpen(false)} />
 
       {/* Custom cursor — always on top */}
       <CustomCursor />

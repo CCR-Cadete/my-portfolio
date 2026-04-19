@@ -3,12 +3,11 @@ import styles from './DepthPanel.module.css'
 import Footer from './Footer'
 
 // ── Gallery screens ───────────────────────────────────────────────
-// Replace these with the actual Cloudinary image URLs for each screen.
 const GALLERY = [
-  { num: '01', label: 'Onboarding',                src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '02', label: 'Login & Sign Up',            src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '03', label: 'Homepage — My Global Panel', src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '04', label: 'Plans Store',                src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '01', label: 'Onboarding',            src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637585/Intro_rlucje.mp4' },
+  { num: '02', label: 'Login & Sign Up',        src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637588/Login_do1cel.mp4' },
+  { num: '03', label: 'Home — My Global Panel', src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637846/Homepage_b9c7zz.mp4' },
+  { num: '04', label: 'Checkout',               src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637585/Checkout_qirzae.mp4' },
 ]
 
 interface Props {
@@ -245,7 +244,7 @@ export default function DepthPanel({ open, onClose }: Props) {
           {/* ── 1 · Hero ──────────────────────────────────────────── */}
           <section className={styles.heroSection}>
             <img
-              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png"
+              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png"
               alt="Depth — Global eSIM Platform"
               className={styles.heroImg}
             />
@@ -280,11 +279,15 @@ export default function DepthPanel({ open, onClose }: Props) {
               <div className={styles.galleryMain}>
                 <div className={styles.screenFrame}>
                   {open && (
-                    <img
+                    <video
                       key={activeScreen}
                       src={GALLERY[activeScreen].src}
-                      alt={GALLERY[activeScreen].label}
-                      className={styles.screenImg}
+                      className={styles.screenVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="none"
                     />
                   )}
                 </div>
