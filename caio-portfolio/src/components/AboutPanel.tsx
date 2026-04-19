@@ -106,7 +106,7 @@ export default function AboutPanel({ open, onClose }: Props) {
       const mx = mouseRef.current.x
       const my = mouseRef.current.y
 
-      ctx.fillStyle = '#05090f'
+      ctx.fillStyle = '#05070F'
       ctx.fillRect(0, 0, W, H)
 
       const ATTRACT_R = 200
@@ -217,7 +217,7 @@ export default function AboutPanel({ open, onClose }: Props) {
 
             <div className={styles.bio}>
               <p>
-                I'm a UX/UI Designer with 8 years of experience in B2B and SaaS products. My
+                I'm a Product Designer with 8 years of experience in B2B and SaaS products. My
                 background started in building automation, working directly with technical users and
                 stakeholders on complex supervisory systems, identifying usability failures and
                 redesigning operational flows that had to work under pressure. That experience
@@ -237,18 +237,18 @@ export default function AboutPanel({ open, onClose }: Props) {
 
             <div className={styles.stats}>
               <div className={styles.stat}>
-                <span className={styles.statLabel}>3x</span>
-                <span className={styles.statDesc}>Faster failure response<br />after interface redesign</span>
-              </div>
-              <div className={styles.statRule} />
-              <div className={styles.stat}>
                 <span className={styles.statLabel}>40%</span>
-                <span className={styles.statDesc}>Increase in critical alert<br />identification in CCTV</span>
+                <span className={styles.statDesc}>Optimization in interface response speed</span>
               </div>
               <div className={styles.statRule} />
               <div className={styles.stat}>
-                <span className={styles.statLabel}>8yr</span>
-                <span className={styles.statDesc}>Experience in industrial<br />interfaces &amp; digital products</span>
+                <span className={styles.statLabel}>10+</span>
+                <span className={styles.statDesc}>Projects B2B & SaaS products delivered</span>
+              </div>
+              <div className={styles.statRule} />
+              <div className={styles.stat}>
+                <span className={styles.statLabel}>8+</span>
+                <span className={styles.statDesc}>Years experience in digital interfaces &amp; industrial systems</span>
               </div>
             </div>
           </div>

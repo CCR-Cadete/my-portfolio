@@ -1,19 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import styles from './OmniControlPanel.module.css'
+import styles from './DepthPanel.module.css'
 import Footer from './Footer'
 
 // ── Gallery screens ───────────────────────────────────────────────
-// Export each screen from Figma, upload to Cloudinary, then replace these URLs.
-// Figma node IDs for reference:
-//   Dashboard Overview    → 7:4953
-//   AccessControl Overview → 7:5716
-//   GlobalAlarms Overview  → 7:6383
-//   HVAC Command           → 7:7055
+// Replace these with the actual Cloudinary image URLs for each screen.
 const GALLERY = [
-  { num: '01', label: 'HVAC',     src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560570/01_-_HVAC_ups55o.mp4' },
-  { num: '02', label: 'Lighting', src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560576/02_-_Lighting_bkrvlt.mp4' },
-  { num: '03', label: 'Systems',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560584/03_-_Systems_naqtgo.mp4' },
-  { num: '04', label: 'Schedule', src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560577/04_-_Schedule_efmg28.mp4' },
+  { num: '01', label: 'Onboarding',                src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '02', label: 'Login & Sign Up',            src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '03', label: 'Homepage — My Global Panel', src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '04', label: 'Plans Store',                src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
 ]
 
 interface Props {
@@ -31,7 +26,7 @@ interface Particle {
   isCon: boolean
 }
 
-export default function OmniControlPanel({ open, onClose }: Props) {
+export default function DepthPanel({ open, onClose }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const mouseRef     = useRef({ x: -9999, y: -9999 })
   const rafRef       = useRef(0)
@@ -41,13 +36,12 @@ export default function OmniControlPanel({ open, onClose }: Props) {
   const revealObsRef = useRef<IntersectionObserver | null>(null)
   const [activeScreen, setActiveScreen] = useState(0)
 
-  // Reset scroll + gallery on open; lock body scroll to prevent double scrollbar
+  // Reset scroll + gallery on open; lock body scroll
   useEffect(() => {
     if (open) {
       setActiveScreen(0)
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0
-        // Reset any previously revealed sections so re-open starts fresh
         scrollRef.current.querySelectorAll(`.${styles.revealed}`)
           .forEach(el => el.classList.remove(styles.revealed))
       }
@@ -58,7 +52,7 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  // Scroll-reveal: watch sections below the fold via IntersectionObserver
+  // Scroll-reveal via IntersectionObserver
   useEffect(() => {
     revealObsRef.current?.disconnect()
     if (!open) return
@@ -93,10 +87,9 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     }
   }, [open])
 
-  // On unmount: stop canvas immediately
   useEffect(() => () => stopRef.current(), [])
 
-  // ── Particle canvas (mirrors AboutPanel) ───────────────────────
+  // ── Particle canvas (identical to OmniControlPanel) ────────────
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => stopRef.current(), 600)
@@ -110,7 +103,7 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     const ctx = canvas.getContext('2d')!
     aliveRef.current = true
     let particles: Particle[] = []
-    let cps: Particle[] = []   // constellation subset — cached to avoid per-frame filter
+    let cps: Particle[] = []
     let lastFrame = 0
 
     function resize() {
@@ -123,10 +116,9 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     function initParticles() {
       if (!canvas) return
       const W = canvas.width, H = canvas.height
-      // Reduce particle count on mobile — still looks great, runs much faster
       const isMobile = W <= 768
       const TOTAL_P  = isMobile ? 60  : 175
-      const CON_P    = isMobile ? 0   : 55   // no constellation lines on mobile
+      const CON_P    = isMobile ? 0   : 55
       particles = Array.from({ length: TOTAL_P }, (_, i) => {
         const isCon = i < CON_P
         const ox    = Math.random()
@@ -144,25 +136,14 @@ export default function OmniControlPanel({ open, onClose }: Props) {
           isCon,
         }
       })
-      // Cache once — on mobile this is an empty array, skipping the O(n²) loop entirely
       cps = particles.filter(p => p.isCon)
     }
 
     function draw(ts: number) {
       if (!aliveRef.current || !canvas) return
-
-      // Pause when the tab is not visible
-      if (document.hidden) {
-        rafRef.current = requestAnimationFrame(draw)
-        return
-      }
-
-      // Throttle to ~30 fps on mobile — imperceptible for a background effect
+      if (document.hidden) { rafRef.current = requestAnimationFrame(draw); return }
       const isMobile = canvas.width <= 768
-      if (isMobile && ts - lastFrame < 33) {
-        rafRef.current = requestAnimationFrame(draw)
-        return
-      }
+      if (isMobile && ts - lastFrame < 33) { rafRef.current = requestAnimationFrame(draw); return }
       lastFrame = ts
 
       const W = canvas.width, H = canvas.height
@@ -180,7 +161,6 @@ export default function OmniControlPanel({ open, onClose }: Props) {
       particles.forEach(p => {
         p.ox = Math.max(0.005, Math.min(0.995, p.ox + p.dx))
         p.oy = Math.max(0.005, Math.min(0.995, p.oy + p.dy))
-
         if (mx > -100) {
           const tdx  = mx - p.x
           const tdy  = my - p.y
@@ -191,12 +171,10 @@ export default function OmniControlPanel({ open, onClose }: Props) {
             p.vy += tdy * f
           }
         }
-
         p.vx *= DAMPING
         p.vy *= DAMPING
         p.x = p.ox * W + p.vx
         p.y = p.oy * H + p.vy
-
         const twinkle = 0.4 + 0.6 * Math.sin(t * p.sp + p.ph)
         const alpha   = p.a * twinkle
         ctx.beginPath()
@@ -205,8 +183,6 @@ export default function OmniControlPanel({ open, onClose }: Props) {
         ctx.fill()
       })
 
-      // Constellation lines — cps is empty on mobile so this block never runs there.
-      // Use d² comparison to skip sqrt for the majority of pairs that are too far apart.
       if (cps.length > 0) {
         const maxDist  = W * 0.16
         const maxDist2 = maxDist * maxDist
@@ -247,7 +223,6 @@ export default function OmniControlPanel({ open, onClose }: Props) {
     window.addEventListener('resize', resize)
     window.addEventListener('mousemove', onMouseMove)
     rafRef.current = requestAnimationFrame(draw)
-
     return () => {}
   }, [open])
 
@@ -270,17 +245,17 @@ export default function OmniControlPanel({ open, onClose }: Props) {
           {/* ── 1 · Hero ──────────────────────────────────────────── */}
           <section className={styles.heroSection}>
             <img
-              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png"
-              alt="OmniControl — Building Management System"
+              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png"
+              alt="Depth — Global eSIM Platform"
               className={styles.heroImg}
             />
           </section>
 
           {/* ── 2 · Overview ─────────────────────────────────────── */}
           <section className={styles.overviewSection}>
-            <h1 className={styles.projectTitle}>OmniControl</h1>
-            <p className={styles.projectSub}>Building Management System · UX/UI</p>
-            <div className={styles.tag}>BMS UX/UI · 2024 · 2 months</div>
+            <h1 className={styles.projectTitle}>Depth</h1>
+            <p className={styles.projectSub}>Global eSIM Platform for Digital Nomads</p>
+            <div className={styles.tag}>Mobile UX/UI · 2025 · Concept</div>
             <div className={styles.rule} />
             <div className={styles.meta}>
               <div className={styles.metaItem}>
@@ -288,32 +263,28 @@ export default function OmniControlPanel({ open, onClose }: Props) {
                 <span className={styles.metaValue}>Lead UX/UI Designer</span>
               </div>
               <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>TEAM</span>
-                <span className={styles.metaValue}>3 Designers · 2 Engineers</span>
+                <span className={styles.metaLabel}>PLATFORM</span>
+                <span className={styles.metaValue}>iOS · Android</span>
               </div>
               <div className={styles.metaItem}>
                 <span className={styles.metaLabel}>TARGET</span>
-                <span className={styles.metaValue}>Facility Managers &amp; Operators</span>
+                <span className={styles.metaValue}>Digital Nomads &amp; Travelers</span>
               </div>
             </div>
           </section>
 
-          {/* ── 3 · Gallery ──────────────────────────────────────── */}
+          {/* ── 3 · Screens (immediately after header, same as OmniControl) ── */}
           <section className={styles.gallerySection}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Screens</h2>
             <div className={`${styles.galleryLayout} ${styles.reveal}`}>
               <div className={styles.galleryMain}>
                 <div className={styles.screenFrame}>
                   {open && (
-                    <video
+                    <img
                       key={activeScreen}
                       src={GALLERY[activeScreen].src}
-                      className={styles.screenVideo}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
+                      alt={GALLERY[activeScreen].label}
+                      className={styles.screenImg}
                     />
                   )}
                 </div>
@@ -339,15 +310,19 @@ export default function OmniControlPanel({ open, onClose }: Props) {
           <section className={styles.section}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Challenge</h2>
             <div className={styles.bodyText}>
-              <p className={`${styles.reveal} ${styles.revealSubtle}`}>Based on years of field observations and informal interviews with facility managers and system operators, I mapped the critical friction points in existing Building Management Systems (BMS).</p>
-              <p className={`${styles.pullQuote} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>"80% of critical errors occur due to information overload and lack of visual hierarchy in legacy BMS interfaces."</p>
+              <p className={`${styles.reveal} ${styles.revealSubtle}`}>
+                Every international traveler knows the anxiety of landing in a new country and scrambling to connect. Existing eSIM solutions are fragmented — multiple apps, confusing activation flows, temporary numbers, zero continuity.
+              </p>
+              <p className={`${styles.pullQuote} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
+                "Digital nomads needed a persistent global identity: one permanent number that follows them everywhere, paired with instant local data plans activated in seconds."
+              </p>
             </div>
             <div className={styles.cardGrid}>
               {[
-                { title: 'Cognitive Overload',  body: 'Excessive raw data without visual hierarchy, making it difficult to distinguish between noise and critical information.' },
-                { title: 'Delayed Response',    body: 'Critical alarms buried under multiple layers of navigation, increasing response time to emergency incidents.' },
-                { title: 'Lack of Context',     body: "Metrics shown in isolation, preventing a holistic view of the building\u2019s health and making root-cause diagnosis impossible." },
-                { title: 'Inconsistent UI',     body: 'Different modules (HVAC, Energy, Access) feeling like separate software, breaking the user\'s mental model.' },
+                { title: 'No Global Identity',   body: 'New temp number per country, breaking continuity with contacts and services.' },
+                { title: 'Complex Activation',   body: 'eSIM setup requires technical knowledge — QR codes, carrier settings, APN configurations.' },
+                { title: 'Fragmented Plans',      body: 'Users juggle multiple apps per region with no unified data view or cost tracking.' },
+                { title: 'Zero Onboarding',       body: 'No guidance for first-time eSIM users. High drop-off before first connection.' },
               ].map((c, i) => (
                 <div key={c.title} className={`${styles.card} ${styles.reveal}`} style={{ transitionDelay: `${i * 80}ms` }}>
                   <h4 className={styles.cardTitle}>{c.title}</h4>
@@ -357,17 +332,17 @@ export default function OmniControlPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 5 · User Insights ────────────────────────────────── */}
+          {/* ── 5 · Insights ─────────────────────────────────────── */}
           <section className={styles.section}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Insights</h2>
             <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`}>
-              Individual interviews were conducted with five facility managers, and several hours of operations were observed in the control room to identify points of cognitive friction.
+              Interviews and shadowing sessions were conducted with digital nomads across three continents to map the emotional and practical friction in their connectivity routines.
             </p>
             <div className={styles.quoteGrid}>
               {[
-                { text: '"I have over 200 sensors to monitor. When an alarm goes off, I spend 5 minutes just trying to find which floor it\'s on."', author: 'Operator' },
-                { text: '"The current system looks like Windows 95. It\'s hard to train new staff because nothing is intuitive."',                  author: 'Facility Manager' },
-                { text: '"I need to see energy consumption and HVAC status at the same time, but I have to keep switching tabs."',                 author: 'Maintenance Tech' },
+                { text: '"I need a number people can reach me on everywhere. I don\'t want to explain every month that I have a new SIM. I want one identity, global data, zero friction."', author: 'Ravena · Digital Nomad & UX Researcher' },
+                { text: '"Every trip means a new SIM ordeal. By the time I\'m connected, I\'ve missed calls, lost messages, and wasted the first hour of my day."',                           author: 'Marco · Freelance Product Consultant' },
+                { text: '"I travel every three weeks for work. Managing a different carrier app per country is a part-time job. I just need to open one app and be online."',                author: 'Yuna · Remote Software Developer' },
               ].map((q, i) => (
                 <div key={q.author} className={`${styles.quoteCard} ${styles.reveal}`} style={{ transitionDelay: `${i * 100}ms` }}>
                   <span className={styles.quoteIcon}>&ldquo;</span>
@@ -376,28 +351,53 @@ export default function OmniControlPanel({ open, onClose }: Props) {
                 </div>
               ))}
             </div>
+            <div className={styles.insightsBody}>
+              <p className={`${styles.reveal} ${styles.revealSubtle}`}>
+                <strong>Goals.</strong> Across all participants, the core aspiration was a single, permanent global identity — not merely connectivity. Users wanted a phone number their contacts could rely on regardless of which country they were in, instant eSIM activation the moment they landed without any technical setup, and a single unified view of all their active plans and data usage across regions.
+              </p>
+              <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
+                <strong>Frustrations.</strong> The recurring pain points followed a predictable pattern: hunting for physical SIM cards at airports during an already stressful arrival window, re-explaining a new number to their professional and personal network every trip, and context-switching between multiple disconnected carrier apps with no shared data visibility or cost tracking.
+              </p>
+            </div>
           </section>
 
           {/* ── 6 · Solution ─────────────────────────────────────── */}
           <section className={styles.solutionSection}>
             <div className={styles.solutionText}>
               <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Solution</h2>
-              <p className={`${styles.reveal} ${styles.revealSubtle}`}>OmniControl delivers a unified command interface that consolidates HVAC, energy, hydraulics, lighting, alarms, and access control into a single intelligent platform.</p>
-              <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>The design system prioritises information hierarchy, critical alerts surface instantly while routine data stays accessible without noise. A dark-first UI reduces eye strain during long monitoring sessions, and progressive disclosure guides new users without limiting expert workflows.</p>
+              <p className={`${styles.reveal} ${styles.revealSubtle}`}>
+                Depth provides every traveler with a permanent global number paired with instant regional eSIM plans — all from one app.
+              </p>
+              <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
+                Built around one promise: "Connect anytime, anywhere." Search destination, select plan, pay, activate. Zero technical steps. Every friction point removed from the critical landing window.
+              </p>
             </div>
-            <div className={`${styles.solutionVisual} ${styles.reveal}`} style={{ transitionDelay: '120ms' }}>
-              <div className={styles.solutionFrame} />
+            <div className={`${styles.solutionSteps} ${styles.reveal}`} style={{ transitionDelay: '120ms' }}>
+              {[
+                { num: '01', title: 'Land & Open',       body: 'App detects location, surfaces relevant plans instantly.' },
+                { num: '02', title: 'Select a Plan',     body: 'Europe, Asia, Americas — clear data, duration, price.' },
+                { num: '03', title: 'One-tap Checkout',  body: 'Saved payment. Confirm in one tap. eSIM downloads automatically.' },
+                { num: '04', title: 'Connected',         body: '"You\'re connected from sky to hell." Zero friction.' },
+              ].map(s => (
+                <div key={s.num} className={styles.solutionStep}>
+                  <span className={styles.stepNum}>{s.num}</span>
+                  <div>
+                    <p className={styles.stepTitle}>{s.title}</p>
+                    <p className={styles.stepBody}>{s.body}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
 
-          {/* ── 7 · Impact & Outcomes ────────────────────────────── */}
+          {/* ── 6 · Impact & Outcomes ────────────────────────────── */}
           <section className={styles.section}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Impact &amp; Outcomes</h2>
             <div className={styles.statsGrid}>
               {[
-                { num: '89%',  label: 'User Satisfaction', desc: 'Post-launch NPS surveys across all facility manager segments' },
-                { num: '40%',  label: 'Faster Decisions',  desc: 'Reduction in average incident response time versus the legacy system' },
-                { num: '150+', label: 'Active Users',      desc: 'Facility managers onboarded within the first 60 days post-launch' },
+                { num: '92%',  label: 'Task Completion',    desc: 'Users activated eSIM successfully on first attempt in usability testing' },
+                { num: '3min', label: 'Time to Connect',    desc: 'From app open to live eSIM — down from 25+ minutes with legacy flows' },
+                { num: '4.8★', label: 'User Satisfaction',  desc: 'Average rating from prototype sessions with digital nomads worldwide' },
               ].map((s, i) => (
                 <div key={s.label} className={`${styles.statCard} ${styles.reveal} ${styles.revealStat}`} style={{ transitionDelay: `${i * 120}ms` }}>
                   <span className={styles.statNum}>{s.num}</span>
@@ -408,14 +408,14 @@ export default function OmniControlPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 8 · Key Learnings ────────────────────────────────── */}
+          {/* ── 7 · Key Learnings ────────────────────────────────── */}
           <section className={styles.section}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Key Learnings</h2>
             <div className={styles.learningsGrid}>
               {[
-                { num: '01', title: 'Align before you design',              body: 'Based on years of field observations, stakeholder alignment before wireframing saved three weeks of rework. The discovery phase revealed misaligned expectations between IT and facilities teams.' },
-                { num: '02', title: 'Dark mode is an ergonomic requirement', body: 'Continuous monitoring environments demand low-luminance UIs. The dark-first design reduced visual fatigue, validated by a 94% preference score in controlled user testing sessions.' },
-                { num: '03', title: 'Progressive disclosure over simplification', body: 'Rather than hiding complexity, we layered it. Novices get guided flows with contextual tooltips; experts get direct access and keyboard shortcuts, resolving onboarding vs. power-user tension.' },
+                { num: '01', title: 'Solve for the emotional peak',          body: 'The landing anxiety window — first 10 minutes in a new country — is the highest-stakes moment. Designing for that context drove every key UX decision.' },
+                { num: '02', title: 'Identity reduces load more than features', body: "Users didn't want more options — they wanted to stop thinking about connectivity. One permanent number was the single most impactful design decision." },
+                { num: '03', title: 'Zero-friction needs ruthless scope cuts', body: 'Every extra screen caused measurable drop-off. Cutting from 8 steps to 3 doubled the success rate in prototype testing.' },
               ].map((l, i) => (
                 <div key={l.num} className={`${styles.learning} ${styles.reveal}`} style={{ transitionDelay: `${i * 100}ms` }}>
                   <span className={styles.learningNum}>{l.num}</span>
@@ -426,15 +426,38 @@ export default function OmniControlPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 9 · Next Project ─────────────────────────────────── */}
+          {/* ── 8 · Beyond the MVP ──────────────────────────────── */}
+          <section className={styles.section}>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Beyond the MVP</h2>
+            <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`}>
+              The MVP successfully addresses the anxiety of landing and connecting, providing a permanent global identity and a seamless eSIM activation process for travelers.
+            </p>
+            <div className={styles.nextStepsGrid}>
+              {[
+                { title: 'Integration with Digital Banks',       desc: 'Direct top-ups and financial management for digital nomads.' },
+                { title: 'In-Flight and Maritime Connectivity',  desc: 'Expanding the promise to all modes of travel.' },
+                { title: 'Community Features',                   desc: 'Real-time local insights and networking for the nomad community.' },
+              ].map((ns, i) => (
+                <div key={ns.title} className={`${styles.nextStep} ${styles.reveal}`} style={{ transitionDelay: `${i * 80}ms` }}>
+                  <h4 className={styles.nextStepTitle}>{ns.title}</h4>
+                  <p className={styles.nextStepDesc}>{ns.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className={`${styles.closingQuote} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '200ms' }}>
+              "It's more than just data; it's about freedom and staying connected to what matters, no matter where you are."
+            </p>
+          </section>
+
+          {/* ── 9 · Next Project ──────────────────────────────────── */}
           <section className={styles.nextSection}>
             <span className={`${styles.nextLabel} ${styles.reveal} ${styles.revealSubtle}`}>Next Project</span>
-            <h2 className={`${styles.nextTitle} ${styles.reveal} ${styles.revealStat}`}>Nexus</h2>
-            <p className={`${styles.nextSub} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>B2B Financial Dashboard · UX/UI</p>
+            <h2 className={`${styles.nextTitle} ${styles.reveal} ${styles.revealStat}`}>OmniControl</h2>
+            <p className={`${styles.nextSub} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>BMS UX/UI Platform</p>
             <button className={`${styles.nextBtn} ${styles.reveal}`} style={{ transitionDelay: '160ms' }}>View Case Study →</button>
             <div className={`${styles.dots} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '200ms' }}>
               {[0, 1, 2, 3].map(i => (
-                <div key={i} className={`${styles.dot} ${i === 0 ? styles.dotActive : ''}`} />
+                <div key={i} className={`${styles.dot} ${i === 2 ? styles.dotActive : ''}`} />
               ))}
             </div>
           </section>
