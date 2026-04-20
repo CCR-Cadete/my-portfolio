@@ -46,21 +46,18 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
   const introInnerRef  = useRef<HTMLDivElement>(null)
 
   const anim = useRef({
-    particles:           [] as Particle[],
-    cps:                 [] as Particle[],  // constellation subset — cached, avoids per-frame filter
-    cState:              'idle' as 'idle' | 'contracting' | 'expanding' | 'done',
-    cProgress:           0,
-    expandScale:         1,
-    constellationAlpha:  1,
-    heroVisible:         false,
-    rafId:               0,
-    glitchIv:            null as ReturnType<typeof setInterval> | null,
-    timers:              [] as ReturnType<typeof setTimeout>[],
-    textPos:             { x: 0.5, y: 0.5 },
+    particles:          [] as Particle[],
+    cps:                [] as Particle[],
+    cState:             'idle' as 'idle' | 'dispersing' | 'done',
+    constellationAlpha: 1,
+    heroVisible:        false,
+    rafId:              0,
+    glitchIv:           null as ReturnType<typeof setInterval> | null,
+    timers:             [] as ReturnType<typeof setTimeout>[],
   })
 
   useEffect(() => {
-    const st      = anim.current
+    const st        = anim.current
     const _bgCanvas = bgCanvasRef.current
     if (!_bgCanvas) return
     const bgCanvas: HTMLCanvasElement = _bgCanvas
@@ -84,7 +81,6 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
 
     function initConstellation() {
       const W = bgCanvas.width, H = bgCanvas.height
-      // Fewer particles on mobile — still looks good, runs much faster
       const isMobile = W <= 768
       const TOTAL_P  = isMobile ? 80  : 175
       const CON_P    = isMobile ? 20  : 55
@@ -105,44 +101,42 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           isCon,
         }
       })
-      // Cache constellation particles once — avoids a new array allocation every frame
       st.cps = st.particles.filter(p => p.isCon)
     }
 
     function drawBgFrame(ts: number) {
-      // Pause when tab is not visible — browser already throttles rAF but this avoids
-      // any unnecessary computation on the frames that do fire while hidden
       if (document.hidden) {
         st.rafId = requestAnimationFrame(drawBgFrame)
         return
       }
 
       const W = bgCanvas.width, H = bgCanvas.height
-      ctx.clearRect(0, 0, W, H)
       const t = ts * 0.001
 
-      // ── Particle simulation — skipped entirely once intro is done ──
-      // After the intro completes, constellationAlpha = 0 so particles are invisible.
-      // There is no reason to simulate or draw them; only the waveform remains.
+      ctx.clearRect(0, 0, W, H)
+
+      // ── Particle simulation ──
       if (st.cState !== 'done') {
+        if (st.cState === 'dispersing') {
+          st.constellationAlpha = Math.max(0, st.constellationAlpha - 0.012)
+          if (st.constellationAlpha === 0) st.cState = 'done'
+        }
+
         st.particles.forEach(p => {
           if (st.cState === 'idle') {
             p.ox = Math.max(0.01, Math.min(0.99, p.ox + p.dx))
             p.oy = Math.max(0.01, Math.min(0.99, p.oy + p.dy))
             p.x  = p.ox * W
             p.y  = p.oy * H
-          } else if (st.cState === 'contracting') {
-            const e = easeInOutCubic(st.cProgress)
-            p.x = p.ox * W + (W * 0.5 - p.ox * W) * e
-            p.y = p.oy * H + (H * 0.5 - p.oy * H) * e
-          } else if (st.cState === 'expanding') {
-            p.x += p.ex * Math.max(W, H) * 0.06
-            p.y += p.ey * Math.max(W, H) * 0.06
+          } else if (st.cState === 'dispersing') {
+            p.x  += p.ex
+            p.y  += p.ey
+            p.ex *= 0.97
+            p.ey *= 0.97
           }
 
           const twinkle = 0.4 + 0.6 * Math.sin(t * p.sp * 60 + p.ph)
-          let alpha = p.a * twinkle * st.constellationAlpha
-          if (st.cState === 'expanding') alpha *= (1 - st.expandScale)
+          const alpha   = p.a * twinkle * st.constellationAlpha
 
           ctx.beginPath()
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
@@ -150,10 +144,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           ctx.fill()
         })
 
-        // ── Constellation lines ──
-        // Use cached cps array (no per-frame filter allocation).
-        // Use d² comparison to avoid sqrt on the majority of pairs that are too far.
-        if (st.constellationAlpha > 0 && st.cState !== 'expanding') {
+        // Constellation lines — idle only
+        if (st.constellationAlpha > 0 && st.cState === 'idle') {
           const maxDist  = W * 0.18
           const maxDist2 = maxDist * maxDist
           for (let i = 0; i < st.cps.length; i++) {
@@ -177,12 +169,10 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
 
       // ── Waveform (hero phase only) ──
       if (st.heroVisible) {
-        const wY      = H * 0.82
+        const wY       = H * 0.82
         const isMobile = W <= 768
-        // Larger step on mobile — fewer lineTo calls, still looks smooth
-        const step    = isMobile ? 4 : 2
-        // Single layer on mobile saves ~half the path calculations
-        const wLayers = isMobile
+        const step     = isMobile ? 4 : 2
+        const wLayers  = isMobile
           ? [{ amp: 10, freq: 0.016, sp: 0.55, a: 0.06 }]
           : [
               { amp: 10, freq: 0.016, sp: 0.55, a: 0.06 },
@@ -227,102 +217,98 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       })
     }
 
-    function triggerConstellation() {
-      st.cState    = 'contracting'
-      st.cProgress = 0
-      const pCanvas = planetCanvasRef.current
-      if (!pCanvas) return
-      const pc: HTMLCanvasElement = pCanvas
+    function triggerDispersion() {
+      const W  = bgCanvas.width
+      const H  = bgCanvas.height
+      const cx = W / 2
+      const cy = H / 2
 
-      const frame0 = new Image()
-      frame0.crossOrigin = 'anonymous'
-      frame0.src = `${BASE}${FRAMES[0]}.png`
-      frame0.onload = () => {
-        const pCtx = pc.getContext('2d')
-        if (!pCtx) return
-        const cw = pc.width || window.innerWidth
-        const ch = pc.height || window.innerHeight
-        if (!pc.width) { pc.width = cw; pc.height = ch }
-        const s = Math.max(cw / frame0.naturalWidth, ch / frame0.naturalHeight)
-        pCtx.clearRect(0, 0, cw, ch)
-        pCtx.drawImage(
-          frame0,
-          (cw - frame0.naturalWidth  * s) / 2,
-          (ch - frame0.naturalHeight * s) / 2,
-          frame0.naturalWidth  * s,
-          frame0.naturalHeight * s,
-        )
+      // ── Load planet canvas ──
+      const pCanvas = planetCanvasRef.current
+      if (pCanvas) {
+        const pc: HTMLCanvasElement = pCanvas
+        const frame0 = new Image()
+        frame0.crossOrigin = 'anonymous'
+        frame0.src = `${BASE}${FRAMES[0]}.png`
+        frame0.onload = () => {
+          const pCtx = pc.getContext('2d')
+          if (!pCtx) return
+          const cw = pc.width || W
+          const ch = pc.height || H
+          if (!pc.width) { pc.width = cw; pc.height = ch }
+          const s = Math.max(cw / frame0.naturalWidth, ch / frame0.naturalHeight)
+          pCtx.clearRect(0, 0, cw, ch)
+          pCtx.drawImage(
+            frame0,
+            (cw - frame0.naturalWidth  * s) / 2,
+            (ch - frame0.naturalHeight * s) / 2,
+            frame0.naturalWidth  * s,
+            frame0.naturalHeight * s,
+          )
+        }
+        pc.style.transition = 'opacity 1.8s ease, transform 1.8s ease'
+        pc.style.opacity    = '1'
+        pc.style.transform  = 'scale(1)'
       }
 
-      const contractDur   = 900
-      const contractStart = performance.now()
+      // ── Compute repulsion velocities from current positions ──
+      // Each particle is pushed away from its neighbours based on proximity.
+      // Combined with a gentle push away from center, this clears space for the hero.
+      st.particles.forEach(p => { p.ex = 0; p.ey = 0 })
 
-      function contractStep(now: number) {
-        st.cProgress          = Math.min((now - contractStart) / contractDur, 1)
-        st.constellationAlpha = 1 - st.cProgress
-
-        pc.style.opacity   = (st.cProgress * st.cProgress).toFixed(3)
-        pc.style.transform = `scale(${(1.3 - st.cProgress * 0.3).toFixed(3)})`
-
-        if (st.cProgress < 1) {
-          requestAnimationFrame(contractStep)
-        } else {
-          st.constellationAlpha = 0
-          st.cState             = 'done'
-          pc.style.opacity      = '1'
-          pc.style.transform    = 'scale(1)'
+      const repelR  = Math.max(W, H) * 0.28
+      const repelR2 = repelR * repelR
+      for (let i = 0; i < st.particles.length; i++) {
+        for (let j = i + 1; j < st.particles.length; j++) {
+          const pi = st.particles[i], pj = st.particles[j]
+          const dx = pi.x - pj.x, dy = pi.y - pj.y
+          const d2 = dx * dx + dy * dy
+          if (d2 < repelR2 && d2 > 0.01) {
+            const d  = Math.sqrt(d2)
+            const f  = (repelR - d) / repelR * 2.2  // linear falloff
+            const nx = dx / d, ny = dy / d
+            pi.ex += nx * f;  pi.ey += ny * f
+            pj.ex -= nx * f;  pj.ey -= ny * f
+          }
         }
       }
-      requestAnimationFrame(contractStep)
+
+      // Add a push away from center so the hero space clears
+      st.particles.forEach(p => {
+        const dx = p.x - cx, dy = p.y - cy
+        const d  = Math.max(Math.sqrt(dx * dx + dy * dy), 1)
+        p.ex += (dx / d) * 1.2
+        p.ey += (dy / d) * 1.2
+      })
+
+      st.cState             = 'dispersing'
+      st.constellationAlpha = 1
+
+      // ── Fade out the intro name overlay ──
+      const introInner = introInnerRef.current
+      if (introInner) {
+        introInner.style.transition = 'opacity 0.9s ease'
+        introInner.style.opacity    = '0'
+      }
+      setTimeout(() => {
+        const introEl = introRef.current
+        if (introEl) introEl.style.opacity = '0'
+      }, 950)
+
+      // ── Reveal hero while particles are still dispersing ──
+      setTimeout(revealHero, 200)
     }
 
     function revealHero() {
       st.heroVisible = true
 
-      const subtitle = subtitleRef.current
-      if (subtitle) {
-        subtitle.style.transition = 'opacity 0.35s ease'
-        subtitle.style.opacity    = '0'
-      }
+      heroRoleRef.current?.classList.add(styles.heroRoleShow)
+      heroDividerRef.current?.classList.add(styles.heroDividerShow)
 
-      ;[baseCaioRef, baseCadeteRef, ghostCaioRef, ghostCadeteRef].forEach(r => {
-        if (r.current) r.current.style.opacity = '0'
-      })
-
-      const _introEl    = introRef.current
-      const _introInner = introInnerRef.current
-      if (!_introEl || !_introInner) return
-      const introEl:    HTMLDivElement = _introEl
-      const introInner: HTMLDivElement = _introInner
-
-      introInner.style.transformOrigin = '50% 50%'
-      const dur   = 900
-      const start = performance.now()
-
-      function collapseFrame(now: number) {
-        const raw = Math.min((now - start) / dur, 1)
-        const t   = easeInOutCubic(raw)
-
-        introInner.style.transform = `scale(${(1 - t).toFixed(4)})`
-        introInner.style.opacity   = (1 - t).toFixed(4)
-
-        if (raw < 1) {
-          requestAnimationFrame(collapseFrame)
-          return
-        }
-
-        introEl.style.opacity = '0'
-
-        setTimeout(() => {
-          heroRoleRef.current?.classList.add(styles.heroRoleShow)
-          heroDividerRef.current?.classList.add(styles.heroDividerShow)
-          setTimeout(() => {
-            heroBodyRef.current?.classList.add(styles.heroBodyShow)
-            setTimeout(revealHeroText, 300)
-          }, 150)
-        }, 100)
-      }
-      requestAnimationFrame(collapseFrame)
+      setTimeout(() => {
+        heroBodyRef.current?.classList.add(styles.heroBodyShow)
+        setTimeout(revealHeroText, 300)
+      }, 220)
     }
 
     function revealHeroText() {
@@ -356,11 +342,9 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
 
     function run() {
       if (!mounted) return
-      st.heroVisible          = false
-      st.cState               = 'idle'
-      st.cProgress            = 0
-      st.expandScale          = 0
-      st.constellationAlpha   = 1
+      st.heroVisible        = false
+      st.cState             = 'idle'
+      st.constellationAlpha = 1
 
       setFillProgress(0)
 
@@ -372,10 +356,10 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       introEl.style.transform  = 'none'
       introEl.style.transition = 'none'
       bgEl.style.transition    = 'none'
+
       if (introInnerRef.current) {
-        introInnerRef.current.style.transform       = 'none'
-        introInnerRef.current.style.transformOrigin = ''
-        introInnerRef.current.style.opacity         = ''
+        introInnerRef.current.style.transition = 'none'
+        introInnerRef.current.style.opacity    = ''
       }
 
       const fillItems = [
@@ -394,8 +378,9 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
 
       const pc = planetCanvasRef.current
       if (pc) {
-        pc.style.opacity   = '0'
-        pc.style.transform = 'scale(1.3)'
+        pc.style.transition = 'none'
+        pc.style.opacity    = '0'
+        pc.style.transform  = 'scale(1.05)'
       }
 
       nameCornerRef.current?.classList.remove(styles.nameCornerShow)
@@ -451,10 +436,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
           if (p < 1) {
             requestAnimationFrame(fillStep)
           } else {
-            setTimeout(() => {
-              triggerConstellation()
-              revealHero()
-            }, 400)
+            setTimeout(triggerDispersion, 400)
           }
         }
         requestAnimationFrame(fillStep)
