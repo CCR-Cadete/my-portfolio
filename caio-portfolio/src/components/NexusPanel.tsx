@@ -10,15 +10,21 @@ import Footer from './Footer'
 //   Connected Accounts → 06 — Key Screens / Screen 03
 //   Access Management  → 06 — Key Screens / Screen 04
 const GALLERY = [
-  { num: '01', label: 'Dashboard',          src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '02', label: 'Transactions',       src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '03', label: 'Connected Accounts', src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '04', label: 'Access Management',  src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '01', label: 'Prototype Figma',     src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776650123/Prototype_Figma_cdf4ru.mp4' },
+  { num: '02', label: 'Prototype Vibe Coding',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776650107/Prototype_v0_tikxc0.mp4' },
+]
+
+const ALL_PROJECTS = [
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
 ]
 
 interface Props {
   open: boolean
   onClose: () => void
+  onProjectClick: (id: string) => void
 }
 
 interface Particle {
@@ -31,7 +37,7 @@ interface Particle {
   isCon: boolean
 }
 
-export default function NexusPanel({ open, onClose }: Props) {
+export default function NexusPanel({ open, onClose, onProjectClick }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const mouseRef     = useRef({ x: -9999, y: -9999 })
   const rafRef       = useRef(0)
@@ -50,11 +56,16 @@ export default function NexusPanel({ open, onClose }: Props) {
         scrollRef.current.querySelectorAll(`.${styles.revealed}`)
           .forEach(el => el.classList.remove(styles.revealed))
       }
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
     } else {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
   }, [open])
 
   // Scroll-reveal via IntersectionObserver
@@ -318,9 +329,9 @@ export default function NexusPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 4 · The Problem ──────────────────────────────────── */}
+          {/* ── 4 · Problem ──────────────────────────────────── */}
           <section className={styles.section}>
-            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>The Problem</h2>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Problem</h2>
             <h3 className={`${styles.problemHeadline} ${styles.reveal} ${styles.revealSubtle}`}>SMBs are flying blind</h3>
             <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '60ms' }}>
               Small business owners juggle multiple bank accounts, spreadsheets and manual reconciliation with no unified view of their own finances.
@@ -345,7 +356,7 @@ export default function NexusPanel({ open, onClose }: Props) {
 
           {/* ── 5 · User Insights ────────────────────────────────── */}
           <section className={styles.section}>
-            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>User Insights</h2>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Insights</h2>
             <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`}>
               In-depth interviews with small business owners revealed a consistent pattern: financial anxiety driven by fragmentation, not by lack of data.
             </p>
@@ -360,7 +371,7 @@ export default function NexusPanel({ open, onClose }: Props) {
                 {
                   name: 'Rafael Mendes',
                   role: '45 · Construction company owner · Curitiba',
-                  quote: '"Before I commit to a new project I need to know if I have cash to cover payroll. Right now I just guess — and sometimes I get it wrong."',
+                  quote: '"Before I commit to a new project I need to know if I have cash to cover payroll. Right now I just guess, and sometimes I get it wrong."',
                   pains: ['Cash flow blind spots across 3 bank accounts', 'No forward visibility on 30/60-day position', 'Wasted 25h/month on manual reconciliation'],
                 },
               ].map((p, i) => (
@@ -385,7 +396,7 @@ export default function NexusPanel({ open, onClose }: Props) {
           {/* ── 5 · Solution ─────────────────────────────────────── */}
           <section className={styles.solutionSection}>
             <div className={styles.solutionText}>
-              <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>The Solution</h2>
+              <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Solution</h2>
               <h3 className={`${styles.problemHeadline} ${styles.reveal} ${styles.revealSubtle}`}>One platform. Total clarity.</h3>
               <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '60ms' }}>
                 Nexus connects all bank accounts via Open Finance and delivers the insights SMB owners need in a clean, role-aware interface.
@@ -395,7 +406,7 @@ export default function NexusPanel({ open, onClose }: Props) {
               {[
                 { num: '[1]', title: 'Unified Dashboard',      body: 'Consolidated balance across all connected accounts with real-time sync via Open Finance API' },
                 { num: '[2]', title: 'Cash Flow Projection',   body: '30/60/90-day forecast based on historical patterns and scheduled receivables' },
-                { num: '[3]', title: 'Role-Based Access',      body: 'Owner, Accountant and Viewer roles — each sees only what they need to see' },
+                { num: '[3]', title: 'Role-Based Access',      body: 'Owner, Accountant and Viewer roles, each sees only what they need to see' },
                 { num: '[4]', title: 'Smart Alerts',           body: 'Proactive notifications for low balance, unusual transactions and projection shortfalls' },
               ].map(item => (
                 <div key={item.num} className={styles.solutionItem}>
@@ -414,7 +425,7 @@ export default function NexusPanel({ open, onClose }: Props) {
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Vibe Coding</h2>
             <h3 className={`${styles.problemHeadline} ${styles.reveal} ${styles.revealSubtle}`}>From prompt to prototype in under 5 minutes</h3>
             <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '60ms' }}>
-              Nexus was prototyped using v0 by Vercel — an AI-powered UI generation tool. Instead of building components from scratch, natural language prompts generated React + Tailwind screens that were then refined in Figma. This compressed a 2-week build into 3 days, letting me focus on UX decisions rather than implementation details.
+              Nexus was prototyped using v0 by Vercel, an AI-powered UI generation tool. Instead of building components from scratch, natural language prompts generated React + Tailwind screens that were then refined in Figma. This compressed a 2-week build into 3 days, letting me focus on UX decisions rather than implementation details.
             </p>
             <div className={`${styles.processSteps} ${styles.reveal}`} style={{ transitionDelay: '100ms' }}>
               {([
@@ -437,20 +448,20 @@ export default function NexusPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 8 · Learnings ────────────────────────────────────── */}
+          {/* ── 8 · Outcomes ─────────────────────────────────────── */}
           <section className={styles.section}>
-            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Learnings</h2>
-            <h3 className={`${styles.problemHeadline} ${styles.reveal} ${styles.revealSubtle}`}>What I learned building Nexus</h3>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Outcomes</h2>
+            <h3 className={`${styles.problemHeadline} ${styles.reveal} ${styles.revealSubtle}`}>From validated concept to product in motion</h3>
             <div className={`${styles.learnings3} ${styles.reveal}`} style={{ transitionDelay: '80ms' }}>
               <div className={styles.learningBlock}>
                 <div className={`${styles.learningAccent} ${styles.learningAccentGreen}`} />
-                <h4 className={styles.learningBlockTitle}>What Worked</h4>
+                <h4 className={styles.learningBlockTitle}>Already Validated</h4>
                 <ul className={styles.learningList}>
                   {[
-                    'Open Finance as a UX constraint',
-                    'Role-based views reduced cognitive load',
-                    'v0 prototyping proved the concept fast',
-                    'Cash flow projection as key differentiator',
+                    'Open Finance integration confirms the core connectivity premise',
+                    'Role-based access resolves the trust barrier in SMB teams',
+                    'Cash flow projection is the highest-engagement feature',
+                    'AI-assisted prototyping is now standard for early-stage work',
                   ].map(item => (
                     <li key={item} className={styles.learningListItem}>{item}</li>
                   ))}
@@ -458,13 +469,13 @@ export default function NexusPanel({ open, onClose }: Props) {
               </div>
               <div className={styles.learningBlock}>
                 <div className={`${styles.learningAccent} ${styles.learningAccentAmber}`} />
-                <h4 className={styles.learningBlockTitle}>What I Would Change</h4>
+                <h4 className={styles.learningBlockTitle}>Currently Refining</h4>
                 <ul className={styles.learningList}>
                   {[
-                    'Start with even fewer features, true MVP',
-                    'Test with real accountants earlier',
-                    'Invest more in the onboarding flow',
-                    'Add empty states from day one',
+                    'Onboarding to reach sub-3-minute time-to-value',
+                    'Accountant-specific flows informed by field research',
+                    'Edge-case handling for first-time bank connections',
+                    'Progressive disclosure to reduce initial complexity',
                   ].map(item => (
                     <li key={item} className={styles.learningListItem}>{item}</li>
                   ))}
@@ -472,13 +483,13 @@ export default function NexusPanel({ open, onClose }: Props) {
               </div>
               <div className={styles.learningBlock}>
                 <div className={`${styles.learningAccent} ${styles.learningAccentBlue}`} />
-                <h4 className={styles.learningBlockTitle}>What Is Next</h4>
+                <h4 className={styles.learningBlockTitle}>On the Roadmap</h4>
                 <ul className={styles.learningList}>
                   {[
-                    'Mobile-first version for on-the-go access',
-                    'AI-powered financial insights and alerts',
-                    'WhatsApp integration for daily cash digest',
-                    'Multi-entity support for multiple companies',
+                    'Mobile-first interface for real-time cash monitoring',
+                    'AI-driven anomaly detection and spend categorization',
+                    'WhatsApp-native daily financial digest',
+                    'Multi-entity support for businesses running parallel ventures',
                   ].map(item => (
                     <li key={item} className={styles.learningListItem}>{item}</li>
                   ))}
@@ -496,15 +507,25 @@ export default function NexusPanel({ open, onClose }: Props) {
             <p className={styles.closingByline}>Designed by Caio Cadete · 2026</p>
           </section>
 
-          {/* ── 10 · Next Project ────────────────────────────────── */}
-          <section className={styles.nextSection}>
-            <span className={`${styles.nextLabel} ${styles.reveal} ${styles.revealSubtle}`}>Next Project</span>
-            <h2 className={`${styles.nextTitle} ${styles.reveal} ${styles.revealStat}`}>depth</h2>
-            <p className={`${styles.nextSub} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>eSIM UX/UI Platform</p>
-            <button className={`${styles.nextBtn} ${styles.reveal}`} style={{ transitionDelay: '160ms' }}>View Case Study →</button>
-            <div className={`${styles.dots} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '200ms' }}>
-              {[0, 1, 2, 3, 4].map(i => (
-                <div key={i} className={`${styles.dot} ${i === 1 ? styles.dotActive : ''}`} />
+          {/* ── 10 · Other Projects ──────────────────────────────── */}
+          <section className={styles.otherSection}>
+            <h2 className={`${styles.otherTitle} ${styles.reveal} ${styles.revealTitle}`}>Other Projects</h2>
+            <div className={styles.otherList}>
+              {ALL_PROJECTS.filter(p => p.id !== 'nexus').map((p, i) => (
+                <button
+                  key={p.id}
+                  className={`${styles.otherCard} ${styles.reveal}`}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  onClick={() => onProjectClick(p.id)}
+                >
+                  <div className={styles.otherCover}>
+                    <img src={p.cover} alt={p.name} className={styles.otherCoverImg} />
+                  </div>
+                  <div className={styles.otherInfo}>
+                    <p className={styles.otherName}>{p.name}</p>
+                    <p className={styles.otherDesc}>{p.desc}</p>
+                  </div>
+                </button>
               ))}
             </div>
           </section>

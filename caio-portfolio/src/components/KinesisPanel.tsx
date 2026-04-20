@@ -10,15 +10,21 @@ import Footer from './Footer'
 //   Features Deep-Dive   → 6-stat horizontal feature grid
 //   Footer               → 4-column typographic grid
 const GALLERY = [
-  { num: '01', label: 'Homepage Hero',       src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '02', label: 'Product Detail',      src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '03', label: 'Features Deep-Dive',  src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { num: '04', label: 'Footer',              src: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { num: '01', label: 'Homepage Hero',   src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637585/Intro_rlucje.mp4' },
+  { num: '02', label: 'Product Detail',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637588/Login_do1cel.mp4' },
+]
+
+const ALL_PROJECTS = [
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
 ]
 
 interface Props {
   open: boolean
   onClose: () => void
+  onProjectClick: (id: string) => void
 }
 
 interface Particle {
@@ -31,7 +37,7 @@ interface Particle {
   isCon: boolean
 }
 
-export default function KinesisPanel({ open, onClose }: Props) {
+export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const mouseRef     = useRef({ x: -9999, y: -9999 })
   const rafRef       = useRef(0)
@@ -49,11 +55,16 @@ export default function KinesisPanel({ open, onClose }: Props) {
         scrollRef.current.querySelectorAll(`.${styles.revealed}`)
           .forEach(el => el.classList.remove(styles.revealed))
       }
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
     } else {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
   }, [open])
 
   useEffect(() => {
@@ -464,15 +475,25 @@ export default function KinesisPanel({ open, onClose }: Props) {
             <p className={styles.closingByline}>Designed by Caio Cadete · 2026</p>
           </section>
 
-          {/* ── 9 · Next Project ─────────────────────────────────── */}
-          <section className={styles.nextSection}>
-            <span className={`${styles.nextLabel} ${styles.reveal} ${styles.revealSubtle}`}>Next Project</span>
-            <h2 className={`${styles.nextTitle} ${styles.reveal} ${styles.revealStat}`}>OmniControl</h2>
-            <p className={`${styles.nextSub} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>BMS UX/UI Platform</p>
-            <button className={`${styles.nextBtn} ${styles.reveal}`} style={{ transitionDelay: '160ms' }}>View Case Study →</button>
-            <div className={`${styles.dots} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '200ms' }}>
-              {[0, 1, 2, 3, 4].map(i => (
-                <div key={i} className={`${styles.dot} ${i === 4 ? styles.dotActive : ''}`} />
+          {/* ── 9 · Other Projects ───────────────────────────────── */}
+          <section className={styles.otherSection}>
+            <h2 className={`${styles.otherTitle} ${styles.reveal} ${styles.revealTitle}`}>Other Projects</h2>
+            <div className={styles.otherList}>
+              {ALL_PROJECTS.filter(p => p.id !== 'kinesis').map((p, i) => (
+                <button
+                  key={p.id}
+                  className={`${styles.otherCard} ${styles.reveal}`}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  onClick={() => onProjectClick(p.id)}
+                >
+                  <div className={styles.otherCover}>
+                    <img src={p.cover} alt={p.name} className={styles.otherCoverImg} />
+                  </div>
+                  <div className={styles.otherInfo}>
+                    <p className={styles.otherName}>{p.name}</p>
+                    <p className={styles.otherDesc}>{p.desc}</p>
+                  </div>
+                </button>
               ))}
             </div>
           </section>

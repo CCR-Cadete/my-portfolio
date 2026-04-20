@@ -128,8 +128,8 @@
    2 · Overview
 ────────────────────────────────────────────────── */
 .overviewSection {
-  padding-top: 64px;
-  padding-bottom: 64px;
+  padding-top: 80px;
+  padding-bottom: 80px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -145,7 +145,7 @@
 
 .projectSub {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.4);
@@ -155,7 +155,7 @@
 .tag {
   display: inline-block;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.2em;
   color: #4D8EFF;
@@ -186,7 +186,7 @@
 
 .metaLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.2em;
   color: rgba(255,255,255,0.3);
@@ -194,14 +194,14 @@
 
 .metaValue {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(255,255,255,0.8);
 }
 
 .overviewBody {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 300;
   line-height: 1.8;
   color: rgba(255,255,255,0.55);
@@ -212,7 +212,7 @@
    3 · Gallery
 ────────────────────────────────────────────────── */
 .gallerySection {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -246,10 +246,10 @@
 
 .screenCaption {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.5);
   margin: 14px 0 0;
 }
 
@@ -261,8 +261,8 @@
 }
 
 .navBtn {
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
   letter-spacing: 0.12em;
   color: rgba(255,255,255,0.3);
   background: none;
@@ -289,18 +289,18 @@
    Generic section
 ────────────────────────────────────────────────── */
 .section {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .sectionTitle {
   font-family: 'Syne', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #4D8EFF;
-  margin: 0 0 16px;
+  margin: 0 0 32px;
 }
 
 .sectionLead {
@@ -324,7 +324,7 @@
 
 .pullQuote {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   font-style: italic;
   line-height: 1.65;
@@ -350,7 +350,7 @@
 
 .statCard {
   background: rgba(255,255,255,0.02);
-  padding: 36px 28px;
+  padding: 44px 32px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -367,14 +367,14 @@
 
 .statLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.8);
 }
 
 .statDesc {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.65;
   color: rgba(255,255,255,0.35);
@@ -387,14 +387,14 @@
 .insightGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 }
 
 .insightCard {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
-  padding: 28px;
+  padding: 36px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -443,7 +443,7 @@
 
 .personaRole {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12em;
   color: rgba(255,255,255,0.35);
@@ -452,7 +452,7 @@
 
 .personaQuote {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   font-style: italic;
   line-height: 1.7;
@@ -466,16 +466,16 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   border-top: 1px solid rgba(255,255,255,0.07);
-  padding-top: 16px;
+  padding-top: 20px;
 }
 
 .insightPainItem {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.55;
   color: rgba(255,255,255,0.45);
   padding-left: 14px;
   position: relative;
@@ -493,7 +493,7 @@
    5 · Solution
 ────────────────────────────────────────────────── */
 .solutionSection {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -504,7 +504,7 @@
 .solutionText {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .solutionText p {
@@ -535,8 +535,8 @@
 }
 
 .solutionNum {
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: #4D8EFF;
   flex-shrink: 0;
@@ -546,7 +546,7 @@
 
 .solutionItemTitle {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.85);
   margin: 0 0 6px;
@@ -554,7 +554,7 @@
 
 .solutionItemBody {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.65;
   color: rgba(255,255,255,0.4);
@@ -567,7 +567,7 @@
 .processSteps {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .processStep {
@@ -579,15 +579,15 @@
 }
 
 .processNum {
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
   letter-spacing: 0.12em;
   color: rgba(255,255,255,0.2);
 }
 
 .processTitle {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.85);
   margin: 0;
@@ -595,7 +595,7 @@
 
 .processBody {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   color: rgba(255,255,255,0.4);
   margin: 0;
@@ -603,11 +603,9 @@
 
 .processArrow {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: 24px;
   color: rgba(77,142,255,0.45);
-  padding: 0 12px;
-  /* align vertically with the title line (num ~16px + 6px gap) */
-  padding-top: 22px;
+  padding: 0 24px;
   line-height: 1;
 }
 
@@ -645,7 +643,7 @@
 
 .learningBlockTitle {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.8);
   margin: 0;
@@ -662,9 +660,9 @@
 
 .learningListItem {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.55;
   color: rgba(255,255,255,0.45);
   padding-left: 14px;
   position: relative;
@@ -705,7 +703,7 @@
 
 .closingByline {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.25);
@@ -726,7 +724,7 @@
 
 .nextLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.24em;
   color: rgba(255,255,255,0.3);
@@ -744,7 +742,7 @@
 
 .nextSub {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.16em;
   color: rgba(255,255,255,0.35);
@@ -758,7 +756,7 @@
   border-radius: 3px;
   padding: 12px 28px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.7);
@@ -855,9 +853,10 @@
     gap: 32px;
   }
 
-  /* Process steps: stack vertically */
+  /* Process steps: portrait stack */
   .processSteps {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
     gap: 0;
   }
 
@@ -909,4 +908,91 @@
   .closingSection {
     padding: 40px 0;
   }
+}
+
+/* ──────────────────────────────────────────────────
+   Other Projects
+────────────────────────────────────────────────── */
+.otherSection {
+  padding: 80px 0 40px;
+}
+
+.otherTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #4D8EFF;
+  margin: 0 0 40px;
+}
+
+.otherList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.otherCard {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.otherCard:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.otherCover {
+  width: 140px;
+  flex-shrink: 0;
+  aspect-ratio: 16/9;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+}
+
+.otherCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.otherInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.otherName {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+}
+
+.otherDesc {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .otherSection { padding: 48px 0 32px; }
+  .otherCover { width: 96px; }
+  .otherName { font-size: 16px; }
 }

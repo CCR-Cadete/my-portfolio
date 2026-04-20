@@ -10,9 +10,17 @@ const GALLERY = [
   { num: '04', label: 'Checkout',               src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637585/Checkout_qirzae.mp4' },
 ]
 
+const ALL_PROJECTS = [
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
+]
+
 interface Props {
   open: boolean
   onClose: () => void
+  onProjectClick: (id: string) => void
 }
 
 interface Particle {
@@ -25,7 +33,7 @@ interface Particle {
   isCon: boolean
 }
 
-export default function DepthPanel({ open, onClose }: Props) {
+export default function DepthPanel({ open, onClose, onProjectClick }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const mouseRef     = useRef({ x: -9999, y: -9999 })
   const rafRef       = useRef(0)
@@ -44,11 +52,16 @@ export default function DepthPanel({ open, onClose }: Props) {
         scrollRef.current.querySelectorAll(`.${styles.revealed}`)
           .forEach(el => el.classList.remove(styles.revealed))
       }
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
     } else {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
   }, [open])
 
   // Scroll-reveal via IntersectionObserver
@@ -314,16 +327,16 @@ export default function DepthPanel({ open, onClose }: Props) {
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Challenge</h2>
             <div className={styles.bodyText}>
               <p className={`${styles.reveal} ${styles.revealSubtle}`}>
-                Every international traveler knows the anxiety of landing in a new country and scrambling to connect. Existing eSIM solutions are fragmented — multiple apps, confusing activation flows, temporary numbers, zero continuity.
+                Every international traveler knows the anxiety of landing in a new country and scrambling to connect. Existing eSIM solutions are fragmented, multiple apps, confusing activation flows, temporary numbers, zero continuity.
               </p>
               <p className={`${styles.pullQuote} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
-                "Digital nomads needed a persistent global identity: one permanent number that follows them everywhere, paired with instant local data plans activated in seconds."
+            "Digital nomads needed a persistent global identity: one permanent number that follows them everywhere, paired with instant local data plans activated in seconds."
               </p>
             </div>
             <div className={styles.cardGrid}>
               {[
                 { title: 'No Global Identity',   body: 'New temp number per country, breaking continuity with contacts and services.' },
-                { title: 'Complex Activation',   body: 'eSIM setup requires technical knowledge — QR codes, carrier settings, APN configurations.' },
+                { title: 'Complex Activation',   body: 'eSIM setup requires technical knowledge, QR codes, carrier settings, APN configurations.' },
                 { title: 'Fragmented Plans',      body: 'Users juggle multiple apps per region with no unified data view or cost tracking.' },
                 { title: 'Zero Onboarding',       body: 'No guidance for first-time eSIM users. High drop-off before first connection.' },
               ].map((c, i) => (
@@ -343,20 +356,21 @@ export default function DepthPanel({ open, onClose }: Props) {
             </p>
             <div className={styles.quoteGrid}>
               {[
-                { text: '"I need a number people can reach me on everywhere. I don\'t want to explain every month that I have a new SIM. I want one identity, global data, zero friction."', author: 'Ravena · Digital Nomad & UX Researcher' },
-                { text: '"Every trip means a new SIM ordeal. By the time I\'m connected, I\'ve missed calls, lost messages, and wasted the first hour of my day."',                           author: 'Marco · Freelance Product Consultant' },
-                { text: '"I travel every three weeks for work. Managing a different carrier app per country is a part-time job. I just need to open one app and be online."',                author: 'Yuna · Remote Software Developer' },
+                { text: '"I need a number people can reach me on everywhere. I don\'t want to explain every month that I have a new SIM. I want one identity, global data, zero friction."', author: 'Ravena Evans', description: 'Digital Nomad' },
+                { text: '"Every trip means a new SIM ordeal. By the time I\'m connected, I\'ve missed calls, lost messages, and wasted the first hour of my day."',                          author: 'Marco Garcia', description: 'Product Consultant' },
+                { text: '"I travel every three weeks for work. Managing a different carrier app per country is a part-time job. I just need to open one app and be online."',                author: 'Yuna Lee', description: 'Software Developer' },
               ].map((q, i) => (
                 <div key={q.author} className={`${styles.quoteCard} ${styles.reveal}`} style={{ transitionDelay: `${i * 100}ms` }}>
                   <span className={styles.quoteIcon}>&ldquo;</span>
                   <p className={styles.quoteText}>{q.text}</p>
                   <span className={styles.quoteAuthor}>— {q.author}</span>
+                  <span className={styles.quoteDescription}>{q.description}</span>
                 </div>
               ))}
             </div>
             <div className={styles.insightsBody}>
               <p className={`${styles.reveal} ${styles.revealSubtle}`}>
-                <strong>Goals.</strong> Across all participants, the core aspiration was a single, permanent global identity — not merely connectivity. Users wanted a phone number their contacts could rely on regardless of which country they were in, instant eSIM activation the moment they landed without any technical setup, and a single unified view of all their active plans and data usage across regions.
+                <strong>Goals.</strong> Across all participants, the core aspiration was a single, permanent global identity, not merely connectivity. Users wanted a phone number their contacts could rely on regardless of which country they were in, instant eSIM activation the moment they landed without any technical setup, and a single unified view of all their active plans and data usage across regions.
               </p>
               <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
                 <strong>Frustrations.</strong> The recurring pain points followed a predictable pattern: hunting for physical SIM cards at airports during an already stressful arrival window, re-explaining a new number to their professional and personal network every trip, and context-switching between multiple disconnected carrier apps with no shared data visibility or cost tracking.
@@ -369,7 +383,7 @@ export default function DepthPanel({ open, onClose }: Props) {
             <div className={styles.solutionText}>
               <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Solution</h2>
               <p className={`${styles.reveal} ${styles.revealSubtle}`}>
-                Depth provides every traveler with a permanent global number paired with instant regional eSIM plans — all from one app.
+                Depth provides every traveler with a permanent global number paired with instant regional eSIM plans, all from one app.
               </p>
               <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>
                 Built around one promise: "Connect anytime, anywhere." Search destination, select plan, pay, activate. Zero technical steps. Every friction point removed from the critical landing window.
@@ -378,7 +392,7 @@ export default function DepthPanel({ open, onClose }: Props) {
             <div className={`${styles.solutionSteps} ${styles.reveal}`} style={{ transitionDelay: '120ms' }}>
               {[
                 { num: '01', title: 'Land & Open',       body: 'App detects location, surfaces relevant plans instantly.' },
-                { num: '02', title: 'Select a Plan',     body: 'Europe, Asia, Americas — clear data, duration, price.' },
+                { num: '02', title: 'Select a Plan',     body: 'Europe, Asia, Americas, clear data, duration, price.' },
                 { num: '03', title: 'One-tap Checkout',  body: 'Saved payment. Confirm in one tap. eSIM downloads automatically.' },
                 { num: '04', title: 'Connected',         body: '"You\'re connected from sky to hell." Zero friction.' },
               ].map(s => (
@@ -399,7 +413,7 @@ export default function DepthPanel({ open, onClose }: Props) {
             <div className={styles.statsGrid}>
               {[
                 { num: '92%',  label: 'Task Completion',    desc: 'Users activated eSIM successfully on first attempt in usability testing' },
-                { num: '3min', label: 'Time to Connect',    desc: 'From app open to live eSIM — down from 25+ minutes with legacy flows' },
+                { num: '3min', label: 'Time to Connect',    desc: 'From app open to live eSIM, down from 25+ minutes with legacy flows' },
                 { num: '4.8★', label: 'User Satisfaction',  desc: 'Average rating from prototype sessions with digital nomads worldwide' },
               ].map((s, i) => (
                 <div key={s.label} className={`${styles.statCard} ${styles.reveal} ${styles.revealStat}`} style={{ transitionDelay: `${i * 120}ms` }}>
@@ -411,14 +425,14 @@ export default function DepthPanel({ open, onClose }: Props) {
             </div>
           </section>
 
-          {/* ── 7 · Key Learnings ────────────────────────────────── */}
+          {/* ── 7 · Design Decisions ─────────────────────────────── */}
           <section className={styles.section}>
-            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Key Learnings</h2>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Design Decisions</h2>
             <div className={styles.learningsGrid}>
               {[
-                { num: '01', title: 'Solve for the emotional peak',          body: 'The landing anxiety window — first 10 minutes in a new country — is the highest-stakes moment. Designing for that context drove every key UX decision.' },
-                { num: '02', title: 'Identity reduces load more than features', body: "Users didn't want more options — they wanted to stop thinking about connectivity. One permanent number was the single most impactful design decision." },
-                { num: '03', title: 'Zero-friction needs ruthless scope cuts', body: 'Every extra screen caused measurable drop-off. Cutting from 8 steps to 3 doubled the success rate in prototype testing.' },
+                { num: '01', title: 'Design for the peak anxiety moment',     body: 'The first 10 minutes after landing are the highest-stakes window in the entire user journey. Every flow decision was benchmarked against that context, reducing the critical path from 8 steps to 3 eliminated the 40% drop-off observed in early prototypes.' },
+                { num: '02', title: 'A permanent identity outweighs a feature set', body: 'Users consistently chose continuity over capability. One persistent global number proved more valuable than any individual feature, it removed the cognitive overhead of managing parallel identities and gave the product a clear, defensible core.' },
+                { num: '03', title: 'Scope discipline as a design tool',      body: 'Removing 5 of the original 8 screens was not a compromise, it was the product decision. Each cut translated directly into measurable usability gains, bringing task completion from 54% to 92% across prototype sessions.' },
               ].map((l, i) => (
                 <div key={l.num} className={`${styles.learning} ${styles.reveal}`} style={{ transitionDelay: `${i * 100}ms` }}>
                   <span className={styles.learningNum}>{l.num}</span>
@@ -452,15 +466,48 @@ export default function DepthPanel({ open, onClose }: Props) {
             </p>
           </section>
 
-          {/* ── 9 · Next Project ──────────────────────────────────── */}
-          <section className={styles.nextSection}>
-            <span className={`${styles.nextLabel} ${styles.reveal} ${styles.revealSubtle}`}>Next Project</span>
-            <h2 className={`${styles.nextTitle} ${styles.reveal} ${styles.revealStat}`}>OmniControl</h2>
-            <p className={`${styles.nextSub} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>BMS UX/UI Platform</p>
-            <button className={`${styles.nextBtn} ${styles.reveal}`} style={{ transitionDelay: '160ms' }}>View Case Study →</button>
-            <div className={`${styles.dots} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '200ms' }}>
-              {[0, 1, 2, 3].map(i => (
-                <div key={i} className={`${styles.dot} ${i === 2 ? styles.dotActive : ''}`} />
+          {/* ── 9 · Outcomes ─────────────────────────────────────── */}
+          <section className={`${styles.closingSection} ${styles.reveal} ${styles.revealSubtle}`}>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Outcomes</h2>
+            <p className={styles.closingTitle}>
+              Depth is still in active development. The core flows have been validated, what comes next is execution.
+            </p>
+            
+            <div className={styles.nextStepsGrid} style={{ marginTop: '32px' }}>
+              {[
+                { title: 'Validated in testing',        desc: '92% task completion and a sub-3-minute activation flow confirmed the concept is sound. The design system and component library are production-ready.' },
+                { title: 'Currently in progress',       desc: 'Developer handoff is underway for the iOS beta. Onboarding copy and edge-case states are being finalized based on the latest round of user feedback.' },
+                { title: 'Coming soon',                 desc: 'A closed beta with a group of digital nomads is planned for Q3. Android support and carrier expansion to Southeast Asia are on the immediate roadmap.' },
+              ].map((ns, i) => (
+                <div key={ns.title} className={`${styles.nextStep} ${styles.reveal}`} style={{ transitionDelay: `${i * 80}ms` }}>
+                  <h4 className={styles.nextStepTitle}>{ns.title}</h4>
+                  <p className={styles.nextStepDesc}>{ns.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className={styles.closingRule} />
+            <p className={styles.closingByline}>Depth · In Development · 2025–2026</p>
+          </section>
+
+          {/* ── 10 · Other Projects ──────────────────────────────── */}
+          <section className={styles.otherSection}>
+            <h2 className={`${styles.otherTitle} ${styles.reveal} ${styles.revealTitle}`}>Other Projects</h2>
+            <div className={styles.otherList}>
+              {ALL_PROJECTS.filter(p => p.id !== 'depth').map((p, i) => (
+                <button
+                  key={p.id}
+                  className={`${styles.otherCard} ${styles.reveal}`}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  onClick={() => onProjectClick(p.id)}
+                >
+                  <div className={styles.otherCover}>
+                    <img src={p.cover} alt={p.name} className={styles.otherCoverImg} />
+                  </div>
+                  <div className={styles.otherInfo}>
+                    <p className={styles.otherName}>{p.name}</p>
+                    <p className={styles.otherDesc}>{p.desc}</p>
+                  </div>
+                </button>
               ))}
             </div>
           </section>

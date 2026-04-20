@@ -135,8 +135,8 @@
    2 · Overview
 ────────────────────────────────────────────────── */
 .overviewSection {
-  padding-top: 64px;
-  padding-bottom: 64px;
+  padding-top: 80px;
+  padding-bottom: 80px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -152,21 +152,21 @@
 
 .projectSub {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.5);
   margin: 0 0 28px;
 }
 
 .tag {
   display: inline-block;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.2em;
   color: #4D8EFF;
-  border: 1px solid rgba(77,142,255,0.35);
+  border: 1px solid rgba(77,142,255,0.5);
   border-radius: 2px;
   padding: 5px 10px;
   margin-bottom: 40px;
@@ -192,24 +192,24 @@
 
 .metaLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.2em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
 }
 
 .metaValue {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  color: rgba(255,255,255,0.8);
+  color: #ffffff;
 }
 
 /* ──────────────────────────────────────────────────
    3 · Gallery
 ────────────────────────────────────────────────── */
 .gallerySection {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -241,10 +241,10 @@
 
 .screenCaption {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.5);
   margin: 14px 0 0;
 }
 
@@ -256,10 +256,10 @@
 }
 
 .navBtn {
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
   letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
   background: none;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 3px;
@@ -276,7 +276,7 @@
 
 .navBtnActive {
   color: #4D8EFF;
-  border-color: rgba(77,142,255,0.4);
+  border-color: rgba(77,142,255,0.5);
   background: rgba(77,142,255,0.07);
 }
 
@@ -284,18 +284,18 @@
    Generic section
 ────────────────────────────────────────────────── */
 .section {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .sectionTitle {
   font-family: 'Syne', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #4D8EFF;
-  margin: 0 0 32px;
+  margin: 0 0 40px;
 }
 
 .sectionLead {
@@ -303,7 +303,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.5);
   margin: 0 0 40px;
 }
 
@@ -313,7 +313,7 @@
 .bodyText {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
@@ -322,7 +322,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
@@ -341,19 +341,19 @@
 .cardGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 }
 
 .card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 6px;
-  padding: 24px;
+  padding: 32px;
 }
 
 .cardTitle {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.85);
   margin: 0 0 10px;
@@ -361,10 +361,10 @@
 
 .cardBody {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.7;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
@@ -374,14 +374,14 @@
 .quoteGrid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 }
 
 .quoteCard {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 6px;
-  padding: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -397,7 +397,7 @@
 
 .quoteText {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.7;
   color: rgba(255,255,255,0.6);
@@ -407,17 +407,17 @@
 
 .quoteAuthor {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
 }
 
 /* ──────────────────────────────────────────────────
    6 · Solution
 ────────────────────────────────────────────────── */
 .solutionSection {
-  padding: 64px 0;
+  padding: 80px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -428,7 +428,7 @@
 .solutionText {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .solutionText p {
@@ -469,7 +469,7 @@
 
 .statCard {
   background: rgba(255,255,255,0.02);
-  padding: 36px 28px;
+  padding: 44px 32px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -486,17 +486,17 @@
 
 .statLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.8);
 }
 
 .statDesc {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.65;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
@@ -515,7 +515,7 @@
   grid-template-rows: auto auto;
   column-gap: 24px;
   row-gap: 8px;
-  padding: 32px 0;
+  padding: 40px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
@@ -525,10 +525,10 @@
 
 .learningNum {
   grid-row: 1 / 3;
-  font-family: 'Syne Mono', monospace;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
   letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.5);
   padding-top: 3px;
 }
 
@@ -542,10 +542,10 @@
 
 .learningBody {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.75;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
@@ -563,10 +563,10 @@
 
 .nextLabel {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.24em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
 }
 
 .nextTitle {
@@ -581,10 +581,10 @@
 
 .nextSub {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
@@ -595,7 +595,7 @@
   border-radius: 3px;
   padding: 12px 28px;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.7);
@@ -756,4 +756,91 @@
   .nextSection {
     padding: 48px 0 32px;
   }
+}
+
+/* ──────────────────────────────────────────────────
+   Other Projects
+────────────────────────────────────────────────── */
+.otherSection {
+  padding: 80px 0 40px;
+}
+
+.otherTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #4D8EFF;
+  margin: 0 0 40px;
+}
+
+.otherList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.otherCard {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.otherCard:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.otherCover {
+  width: 140px;
+  flex-shrink: 0;
+  aspect-ratio: 16/9;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+}
+
+.otherCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.otherInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.otherName {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+}
+
+.otherDesc {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .otherSection { padding: 48px 0 32px; }
+  .otherCover { width: 96px; }
+  .otherName { font-size: 16px; }
 }

@@ -71,16 +71,32 @@ export default function App() {
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
 
       {/* OmniControl case study panel */}
-      <OmniControlPanel open={omniOpen} onClose={() => setOmniOpen(false)} />
+      <OmniControlPanel
+        open={omniOpen}
+        onClose={() => setOmniOpen(false)}
+        onProjectClick={(id) => { setOmniOpen(false); if (id === 'nexus') setNexusOpen(true); if (id === 'depth') setDepthOpen(true); if (id === 'kinesis') setKinesisOpen(true) }}
+      />
 
       {/* Depth case study panel */}
-      <DepthPanel open={depthOpen} onClose={() => setDepthOpen(false)} />
+      <DepthPanel
+        open={depthOpen}
+        onClose={() => setDepthOpen(false)}
+        onProjectClick={(id) => { setDepthOpen(false); if (id === 'omnicontrol') setOmniOpen(true); if (id === 'nexus') setNexusOpen(true); if (id === 'kinesis') setKinesisOpen(true) }}
+      />
 
       {/* Nexus case study panel */}
-      <NexusPanel open={nexusOpen} onClose={() => setNexusOpen(false)} />
+      <NexusPanel
+        open={nexusOpen}
+        onClose={() => setNexusOpen(false)}
+        onProjectClick={(id) => { setNexusOpen(false); if (id === 'omnicontrol') setOmniOpen(true); if (id === 'depth') setDepthOpen(true); if (id === 'kinesis') setKinesisOpen(true) }}
+      />
 
       {/* Kinesis case study panel */}
-      <KinesisPanel open={kinesisOpen} onClose={() => setKinesisOpen(false)} />
+      <KinesisPanel
+        open={kinesisOpen}
+        onClose={() => setKinesisOpen(false)}
+        onProjectClick={(id) => { setKinesisOpen(false); if (id === 'omnicontrol') setOmniOpen(true); if (id === 'nexus') setNexusOpen(true); if (id === 'depth') setDepthOpen(true) }}
+      />
 
       {/* Custom cursor — always on top */}
       <CustomCursor />

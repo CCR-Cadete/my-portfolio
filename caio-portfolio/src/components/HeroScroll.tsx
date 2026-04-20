@@ -33,10 +33,10 @@ const WORD_LETTER_OFFSETS = SCROLL_WORDS.map((_, i) =>
 )
 
 const projects = [
-  { id: 'omnicontrol', num: '01', title: 'OmniControl', subtitle: 'BMS UX/UI',                image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Omnicontrol_awz7k7.png' },
-  { id: 'nexus',       num: '02', title: 'Nexus',       subtitle: 'Financial Dashboard UX/UI', image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Nexus_duuzjo.png' },
-  { id: 'depth',       num: '03', title: 'Depth',       subtitle: 'eSIM App UX/UI',            image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { id: 'kinesis',     num: '04', title: 'Kinesis',     subtitle: 'Drone UI',                  image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290932/Cover_-_Kinesis_hjmokj.png' },
+  { id: 'omnicontrol', num: '01', title: 'OmniControl', subtitle: 'Building Management System · UX/UI',                image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Omnicontrol_awz7k7.png' },
+  { id: 'nexus',       num: '02', title: 'Nexus',       subtitle: 'B2B Financial Dashboard · UX/UI', image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Nexus_duuzjo.png' },
+  { id: 'depth',       num: '03', title: 'Depth',       subtitle: 'Global eSIM & Data App · UX/UI',            image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
+  { id: 'kinesis',     num: '04', title: 'Kinesis',     subtitle: 'Drone Control Interface · UI',                  image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290932/Cover_-_Kinesis_hjmokj.png' },
 ]
 
 function frameUrl(i: number) {
