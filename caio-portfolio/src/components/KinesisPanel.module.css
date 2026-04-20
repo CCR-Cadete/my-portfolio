@@ -160,10 +160,10 @@
 .screenVideo { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 12px; }
 .screenCaption {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.5);
   margin: 14px 0 0;
 }
 .galleryNav { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
@@ -229,7 +229,7 @@
   margin-bottom: 24px;
 }
 .typeBig {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Satoshi', sans-serif;
   font-weight: 800;
   font-size: clamp(36px, 6vw, 56px);
   letter-spacing: -0.01em;
@@ -237,9 +237,9 @@
   line-height: 1;
 }
 .typeAlphabet {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Satoshi', sans-serif;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.35);
 }
@@ -365,9 +365,9 @@
    7 · Component Details
 ────────────────────────────────────────────────── */
 .componentRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 .componentBlock {
   background: rgba(255,255,255,0.03);
@@ -385,6 +385,13 @@
   color: rgba(255,255,255,0.85);
   margin: 0;
 }
+.componentBlockImg {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .componentBlockSub {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
@@ -435,13 +442,14 @@
 }
 .moduleItem {
   display: grid;
-  grid-template-columns: 24px 1fr 1fr auto;
+  grid-template-columns: 24px 1fr 1fr;
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   background: rgba(255,255,255,0.02);
   transition: background 0.15s ease;
+  position: relative;
 }
 .moduleItem:last-child { border-bottom: none; }
 .moduleItemActive { background: rgba(166,77,249,0.06); border-color: rgba(166,77,249,0.15); }
@@ -466,6 +474,10 @@
   color: rgba(255,255,255,0.35);
 }
 .moduleBadge {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 12px;
   font-weight: 400;
@@ -474,7 +486,6 @@
   border: 1px solid rgba(166,77,249,0.35);
   border-radius: 2px;
   padding: 2px 7px;
-  flex-shrink: 0;
 }
 
 /* ──────────────────────────────────────────────────
@@ -576,7 +587,7 @@
   .colorGroups { gap: 32px; }
   .swatchColor { width: 48px; height: 48px; }
   .cardGrid { grid-template-columns: 1fr; }
-  .componentRow { grid-template-columns: 1fr; }
+  .componentRow { gap: 20px; }
   .specGrid { grid-template-columns: 1fr 1fr; }
   .moduleItem { grid-template-columns: 24px 1fr auto; }
   .moduleDesc { display: none; }

@@ -10,8 +10,8 @@ import Footer from './Footer'
 //   Features Deep-Dive   → 6-stat horizontal feature grid
 //   Footer               → 4-column typographic grid
 const GALLERY = [
-  { num: '01', label: 'Homepage Hero',   src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637585/Intro_rlucje.mp4' },
-  { num: '02', label: 'Product Detail',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776637588/Login_do1cel.mp4' },
+  { num: '01', label: 'Homepage',   src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776719450/Homepage_hcrulu.mp4' },
+  { num: '02', label: 'Products',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776719460/Product_List_jzufpw.mp4' },
 ]
 
 const ALL_PROJECTS = [
@@ -250,7 +250,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
               </div>
             </div>
             <p className={`${styles.overviewBody} ${styles.reveal} ${styles.revealSubtle}`}>
-              Kinesis is a high-end drone brand concept built around a single design goal: make premium tech feel premium visually. The project covers the full design system — from typography and color tokens to screen-level UI for a product-focused website.
+              Kinesis is a high-end drone brand concept built around a single design goal: make premium tech feel premium visually. The project covers the full design system, from typography and color tokens to screen-level UI for a product-focused website.
             </p>
           </section>
 
@@ -296,7 +296,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Design System</h2>
             <h3 className={`${styles.dsHeadline} ${styles.reveal} ${styles.revealSubtle}`}>Typography</h3>
             <p className={`${styles.sectionLead} ${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '40ms' }}>
-              Satoshi — chosen for its technical precision and editorial warmth.
+              Satoshi, chosen for its technical precision and editorial warmth.
             </p>
             <div className={`${styles.typeSampleBlock} ${styles.reveal}`} style={{ transitionDelay: '80ms' }}>
               <span className={styles.typeBig}>Satoshi</span>
@@ -391,12 +391,12 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
                 {
                   num: '02',
                   title: 'Purple as the single accent',
-                  body: 'One accent color across the entire system — no secondary palette. The three-stop purple scale (100 / 300 / 500) provides enough range for hover, active and disabled states without introducing noise.',
+                  body: 'One accent color across the entire system, no secondary palette. The three-stop purple scale (100 / 300 / 500) provides enough range for hover, active and disabled states without introducing noise.',
                 },
                 {
                   num: '03',
                   title: 'Spec chips in the hero',
-                  body: 'Key specs (Range, Speed, Sensors, Battery) displayed as icon + value chips anchored at the bottom of the hero. Users scan the most important numbers before committing to scroll — reducing drop-off.',
+                  body: 'Key specs (Range, Speed, Sensors, Battery) displayed as icon + value chips anchored at the bottom of the hero. Users scan the most important numbers before committing to scroll, reducing drop-off.',
                 },
                 {
                   num: '04',
@@ -422,45 +422,26 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
             </p>
             <div className={`${styles.componentRow} ${styles.reveal}`} style={{ transitionDelay: '80ms' }}>
 
-              {/* Spec Grid */}
+              {/* Details */}
               <div className={styles.componentBlock}>
-                <p className={styles.componentBlockTitle}>Spec Grid</p>
-                <p className={styles.componentBlockSub}>Six stats in a 3×2 grid with value and label</p>
-                <div className={styles.specGrid}>
-                  {[
-                    { value: '15 KM',     label: 'Transmission' },
-                    { value: '72 Km/h',   label: 'Top Speed' },
-                    { value: '6 Sensors', label: 'Anti-Collision' },
-                    { value: '5000 mAh',  label: 'Battery' },
-                    { value: '35 Min',    label: 'Flight Time' },
-                    { value: '64 GB',     label: 'Storage' },
-                  ].map(s => (
-                    <div key={s.label} className={styles.specCell}>
-                      <span className={styles.specValue}>{s.value}</span>
-                      <span className={styles.specLabel}>{s.label}</span>
-                    </div>
-                  ))}
-                </div>
+                <p className={styles.componentBlockTitle}>Details</p>
+                <p className={styles.componentBlockSub}>Full-bleed product view with technical specifications and expandable module sections.</p>
+                <img
+                  src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776711811/Kinesis_-_Detail_aiwl5y.png"
+                  alt="Kinesis detail screen"
+                  className={styles.componentBlockImg}
+                />
               </div>
 
-              {/* Module Cards */}
+              {/* Features */}
               <div className={styles.componentBlock}>
-                <p className={styles.componentBlockTitle}>Module Card</p>
-                <p className={styles.componentBlockSub}>Component · name · description — 3 states</p>
-                <div className={styles.moduleList}>
-                  {[
-                    { name: 'Pulse Cam',     desc: 'Ultra-compact stabilized 4K capture', active: false },
-                    { name: 'WhisperBlade',  desc: 'Low-noise precision rotor design',    active: true  },
-                    { name: 'V3 Power',      desc: 'Balanced endurance flight module',    active: false },
-                  ].map(m => (
-                    <div key={m.name} className={`${styles.moduleItem} ${m.active ? styles.moduleItemActive : ''}`}>
-                      <span className={`${styles.moduleDot} ${m.active ? styles.moduleDotActive : ''}`} />
-                      <span className={styles.moduleName}>{m.name}</span>
-                      <span className={styles.moduleDesc}>{m.desc}</span>
-                      {m.active && <span className={styles.moduleBadge}>Active</span>}
-                    </div>
-                  ))}
-                </div>
+                <p className={styles.componentBlockTitle}>Features</p>
+                <p className={styles.componentBlockSub}>Structured overview of core capabilities, organized by category with status indicators.</p>
+                <img
+                  src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776711812/Kinesis_-_Features_x77aou.png"
+                  alt="Kinesis features screen"
+                  className={styles.componentBlockImg}
+                />
               </div>
 
             </div>
@@ -471,7 +452,6 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
             <p className={styles.closingTitle}>
               Capture the Unseen.<br />Define Your Flight.
             </p>
-            <div className={styles.closingRule} />
             <p className={styles.closingByline}>Designed by Caio Cadete · 2026</p>
           </section>
 

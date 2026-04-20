@@ -503,7 +503,6 @@ export default function NexusPanel({ open, onClose, onProjectClick }: Props) {
             <p className={styles.closingTitle}>
               Nexus was designed to prove that B2B financial UX does not have to be complex to be powerful.
             </p>
-            <div className={styles.closingRule} />
             <p className={styles.closingByline}>Designed by Caio Cadete · 2026</p>
           </section>
 

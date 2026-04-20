@@ -141,8 +141,8 @@
 /* Scaler sits inside the circle, centered */
 .splineScaler {
   position: absolute;
-  width: 215%;
-  height: 215%;
+  width: 275%;
+  height: 275%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -180,7 +180,7 @@
 
 .bio p {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 300;
   line-height: 1.75;
   color: rgba(255, 255, 255, 0.6);

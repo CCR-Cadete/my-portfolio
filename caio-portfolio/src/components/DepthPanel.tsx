@@ -394,7 +394,7 @@ export default function DepthPanel({ open, onClose, onProjectClick }: Props) {
                 { num: '01', title: 'Land & Open',       body: 'App detects location, surfaces relevant plans instantly.' },
                 { num: '02', title: 'Select a Plan',     body: 'Europe, Asia, Americas, clear data, duration, price.' },
                 { num: '03', title: 'One-tap Checkout',  body: 'Saved payment. Confirm in one tap. eSIM downloads automatically.' },
-                { num: '04', title: 'Connected',         body: '"You\'re connected from sky to hell." Zero friction.' },
+                { num: '04', title: 'Connected',         body: '"You connected from sky to hell." Zero friction.' },
               ].map(s => (
                 <div key={s.num} className={styles.solutionStep}>
                   <span className={styles.stepNum}>{s.num}</span>
@@ -485,8 +485,7 @@ export default function DepthPanel({ open, onClose, onProjectClick }: Props) {
                 </div>
               ))}
             </div>
-            <div className={styles.closingRule} />
-            <p className={styles.closingByline}>Depth · In Development · 2025–2026</p>
+            <p className={styles.closingByline}>Design By Caio Cadete · 2025–2026</p>
           </section>
 
           {/* ── 10 · Other Projects ──────────────────────────────── */}

@@ -399,7 +399,11 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
               <p className={`${styles.reveal} ${styles.revealSubtle}`} style={{ transitionDelay: '80ms' }}>The design system prioritises information hierarchy, critical alerts surface instantly while routine data stays accessible without noise. A dark-first UI reduces eye strain during long monitoring sessions, and progressive disclosure guides new users without limiting expert workflows.</p>
             </div>
             <div className={`${styles.solutionVisual} ${styles.reveal}`} style={{ transitionDelay: '120ms' }}>
-              <div className={styles.solutionFrame} />
+              <img
+                src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776723110/OmniControl_Mockup_caitsq.png"
+                alt="OmniControl solution mockup"
+                className={styles.solutionFrame}
+              />
             </div>
           </section>
 
@@ -439,7 +443,38 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
             </div>
           </section>
 
-          {/* ── 9 · Other Projects ───────────────────────────────── */}
+          {/* ── 9 · Outcomes ─────────────────────────────────────── */}
+          <section className={`${styles.closingSection} ${styles.reveal} ${styles.revealSubtle}`}>
+            <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Outcomes</h2>
+            <p className={styles.closingTitle}>
+              A legacy of fragmented screens replaced by a single source of truth — and the numbers reflect it.
+            </p>
+            <div className={styles.closingRule} />
+            <div className={styles.nextStepsGrid} style={{ marginTop: '32px' }}>
+              {[
+                {
+                  title: 'Delivered and validated',
+                  desc: '89% satisfaction score confirms the unified interface premise. Incident response time dropped 40% across HVAC, alarms, and access control. 150+ facility managers onboarded in 60 days without guided training — a direct result of progressive disclosure reducing initial cognitive load.',
+                },
+                {
+                  title: 'Currently refining',
+                  desc: 'A mobile companion app for on-site technicians is in active development, extending the platform to the field. Onboarding flows are being optimised using first-month usage telemetry, and the energy analytics module is expanding to include predictive cost forecasting.',
+                },
+                {
+                  title: 'On the roadmap',
+                  desc: 'AI-driven anomaly detection to pre-empt system failures before alarms trigger. Multi-building management from a single dashboard instance. A third-party integration layer targeting BACnet, Modbus, and KNX — covering the majority of legacy building infrastructure in commercial real estate.',
+                },
+              ].map((ns, i) => (
+                <div key={ns.title} className={`${styles.nextStep} ${styles.reveal}`} style={{ transitionDelay: `${i * 80}ms` }}>
+                  <h4 className={styles.nextStepTitle}>{ns.title}</h4>
+                  <p className={styles.nextStepDesc}>{ns.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className={styles.closingByline}>Design By Caio Cadete · 2024–2025</p>
+          </section>
+
+          {/* ── 10 · Other Projects ──────────────────────────────── */}
           <section className={styles.otherSection}>
             <h2 className={`${styles.otherTitle} ${styles.reveal} ${styles.revealTitle}`}>Other Projects</h2>
             <div className={styles.otherList}>
