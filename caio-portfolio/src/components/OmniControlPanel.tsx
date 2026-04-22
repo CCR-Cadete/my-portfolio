@@ -447,14 +447,14 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
           <section className={`${styles.closingSection} ${styles.reveal} ${styles.revealSubtle}`}>
             <h2 className={`${styles.sectionTitle} ${styles.reveal} ${styles.revealTitle}`}>Outcomes</h2>
             <p className={styles.closingTitle}>
-              A legacy of fragmented screens replaced by a single source of truth — and the numbers reflect it.
+              A legacy of fragmented screens replaced by a single source of truth, and the numbers reflect it.
             </p>
             <div className={styles.closingRule} />
             <div className={styles.nextStepsGrid} style={{ marginTop: '32px' }}>
               {[
                 {
                   title: 'Delivered and validated',
-                  desc: '89% satisfaction score confirms the unified interface premise. Incident response time dropped 40% across HVAC, alarms, and access control. 150+ facility managers onboarded in 60 days without guided training — a direct result of progressive disclosure reducing initial cognitive load.',
+                  desc: '89% satisfaction score confirms the unified interface premise. Incident response time dropped 40% across HVAC, alarms, and access control. 150+ facility managers onboarded in 60 days without guided training, a direct result of progressive disclosure reducing initial cognitive load.',
                 },
                 {
                   title: 'Currently refining',
@@ -462,7 +462,7 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
                 },
                 {
                   title: 'On the roadmap',
-                  desc: 'AI-driven anomaly detection to pre-empt system failures before alarms trigger. Multi-building management from a single dashboard instance. A third-party integration layer targeting BACnet, Modbus, and KNX — covering the majority of legacy building infrastructure in commercial real estate.',
+                  desc: 'AI-driven anomaly detection to pre-empt system failures before alarms trigger. Multi-building management from a single dashboard instance. A third-party integration layer targeting BACnet, Modbus, and KNX, covering the majority of legacy building infrastructure in commercial real estate.',
                 },
               ].map((ns, i) => (
                 <div key={ns.title} className={`${styles.nextStep} ${styles.reveal}`} style={{ transitionDelay: `${i * 80}ms` }}>
