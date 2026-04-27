@@ -4,8 +4,6 @@ import DepthPanel from '../components/DepthPanel'
 import NexusPanel from '../components/NexusPanel'
 import KinesisPanel from '../components/KinesisPanel'
 
-const VALID_SLUGS = ['omnicontrol', 'depth', 'nexus', 'kinesis'] as const
-type Slug = typeof VALID_SLUGS[number]
 
 export default function ProjectPage() {
   const { slug } = useParams<{ slug: string }>()
