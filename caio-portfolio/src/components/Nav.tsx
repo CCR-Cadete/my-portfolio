@@ -115,21 +115,17 @@ export default function Nav({ visible, onAboutClick }: Props) {
 
         {/* Links — left-aligned */}
         <div className={styles.mobileMenuLinks}>
-          <a href="#home" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); setTimeout(() => smoothScrollTo(0), 50) }}>Home</a>
+          <a href="#home" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); window.scrollTo(0, 0) }}>Home</a>
           <a href="#work" className={styles.mobileLink} onClick={(e) => {
             e.preventDefault(); closeMenu()
-            setTimeout(() => {
-              const workEl = document.getElementById('works-section')
-              if (workEl) smoothScrollTo(workEl.getBoundingClientRect().top + window.scrollY)
-            }, 50)
+            const workEl = document.getElementById('works-section')
+            if (workEl) window.scrollTo(0, workEl.getBoundingClientRect().top + window.scrollY)
           }}>Work</a>
-          <a href="#about" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); setTimeout(() => onAboutClick(), 50) }}>About</a>
+          <a href="#about" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); onAboutClick() }}>About</a>
           <a href="#contact" className={styles.mobileLink} onClick={(e) => {
             e.preventDefault(); closeMenu()
-            setTimeout(() => {
-              const footer = document.getElementById('site-footer')
-              if (footer) smoothScrollTo(footer.getBoundingClientRect().top + window.scrollY)
-            }, 50)
+            const footer = document.getElementById('site-footer')
+            if (footer) window.scrollTo(0, footer.getBoundingClientRect().top + window.scrollY)
           }}>Contact</a>
         </div>
       </div>
