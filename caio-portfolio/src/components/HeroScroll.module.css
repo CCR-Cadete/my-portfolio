@@ -23,9 +23,9 @@
   align-items: center;
   padding-left: 10vw;
   opacity: 0;
-  pointer-events: auto;
+  pointer-events: none;
   z-index: 11;
-  transition: opacity 0.8s ease;
+  /* No container-level fade — individual items animate in via workRowShow / mobileCardShow */
 }
 .worksShow {
   opacity: 1;
@@ -197,6 +197,13 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .mobileCardShow {
+    opacity: 1;
+    transform: none;
   }
 
   .mobileCardImg {

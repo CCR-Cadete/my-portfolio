@@ -44,10 +44,11 @@ function frameUrl(i: number) {
 }
 
 export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }: Props) {
-  const overlayRef    = useRef<HTMLDivElement>(null)
-  const worksRef      = useRef<HTMLDivElement>(null)
-  const rowRefs       = useRef<(HTMLDivElement | null)[]>([])
-  const wordsBlockRef = useRef<HTMLDivElement>(null)
+  const overlayRef       = useRef<HTMLDivElement>(null)
+  const worksRef         = useRef<HTMLDivElement>(null)
+  const rowRefs          = useRef<(HTMLDivElement | null)[]>([])
+  const mobileCardRefs   = useRef<(HTMLDivElement | null)[]>([])
+  const wordsBlockRef    = useRef<HTMLDivElement>(null)
   const wordRowRefs   = useRef<(HTMLDivElement | null)[]>([])   // row1, row2
   const wordSpanRefs  = useRef<(HTMLSpanElement | null)[]>([])  // span per word (4 total)
   const letterRefs    = useRef<(HTMLSpanElement | null)[]>([])
@@ -176,16 +177,14 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
       if (!wrap) return
       const maxY = wrap.offsetHeight - window.innerHeight
 
-      // ── Footer transition: hide works overlay as user enters footer ──
+      // ── Footer transition: darken overlay as user enters footer ──
+      // The footer (z-index 25) covers the works section (z-index 11) naturally,
+      // so we just fade the dark overlay and leave the works section alone.
       if (window.scrollY > maxY && maxY > 0) {
         const past    = window.scrollY - maxY
-        const fadeOut = Math.min(1, past / 300)  // fade over 300px of footer scroll
+        const fadeOut = Math.min(1, past / 300)
         if (overlay) overlay.style.opacity = (0.30 * (1 - fadeOut)).toFixed(3)
         if (wordsBlockRef.current) wordsBlockRef.current.style.opacity = '0'
-        if (fadeOut > 0.4 && works && works.classList.contains(styles.worksShow)) {
-          works.classList.remove(styles.worksShow)
-          rowRefs.current.forEach(el => el?.classList.remove(styles.workRowShow))
-        }
         return
       }
 
@@ -232,12 +231,19 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
         const shown = works.classList.contains(styles.worksShow)
         if (ot > 0.255 && !shown) {
           works.classList.add(styles.worksShow)
+          // Desktop rows stagger in
           rowRefs.current.forEach((el, i) => {
             if (el) setTimeout(() => el.classList.add(styles.workRowShow), i * 100)
           })
+          // Mobile cards stagger in
+          mobileCardRefs.current.forEach((el, i) => {
+            if (el) setTimeout(() => el.classList.add(styles.mobileCardShow), i * 120)
+          })
         } else if (ot < 0.18 && shown) {
+          // Hide when scrolled back to the hero zone
           works.classList.remove(styles.worksShow)
           rowRefs.current.forEach(el => el?.classList.remove(styles.workRowShow))
+          mobileCardRefs.current.forEach(el => el?.classList.remove(styles.mobileCardShow))
         }
       }
     }
@@ -369,11 +375,12 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
           className={styles.workCover}
         />
 
-        {/* Mobile: horizontal scrolling cards */}
+        {/* Mobile: vertical card stack */}
         <div className={styles.mobileCards}>
-          {projects.map(p => (
+          {projects.map((p, i) => (
             <div
               key={p.id}
+              ref={el => { mobileCardRefs.current[i] = el }}
               className={styles.mobileCard}
               onClick={() => onProjectClick?.(p.id)}
             >

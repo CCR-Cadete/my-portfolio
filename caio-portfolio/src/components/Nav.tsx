@@ -50,9 +50,26 @@ export default function Nav({ visible, onAboutClick }: Props) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Custom eased scroll — browser's 'smooth' races through large distances on mobile
+  function smoothScrollTo(target: number, duration = 900) {
+    const start = window.scrollY
+    const distance = target - start
+    if (Math.abs(distance) < 2) return
+    const startTime = performance.now()
+    function step(now: number) {
+      const elapsed = Math.min(now - startTime, duration)
+      const t = elapsed / duration
+      // ease-in-out cubic
+      const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+      window.scrollTo(0, start + distance * eased)
+      if (elapsed < duration) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }
+
   function handleHomeClick(e: React.MouseEvent) {
     e.preventDefault()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    smoothScrollTo(0)
   }
 
   function handleWorkClick(e: React.MouseEvent) {
@@ -60,14 +77,14 @@ export default function Nav({ visible, onAboutClick }: Props) {
     const wrap = document.getElementById('scroll-wrap')
     if (!wrap) return
     const maxY = wrap.offsetHeight - window.innerHeight
-    window.scrollTo({ top: maxY * 0.95, behavior: 'smooth' })
+    smoothScrollTo(maxY * 0.95)
   }
 
   function handleContactClick(e: React.MouseEvent) {
     e.preventDefault()
     const footer = document.getElementById('site-footer')
     if (!footer) return
-    footer.scrollIntoView({ behavior: 'smooth' })
+    smoothScrollTo(footer.getBoundingClientRect().top + window.scrollY)
   }
 
   const homeActive = atTop && !workActive && !contactActive
@@ -115,10 +132,22 @@ export default function Nav({ visible, onAboutClick }: Props) {
 
         {/* Links — left-aligned */}
         <div className={styles.mobileMenuLinks}>
-          <a href="#home" className={styles.mobileLink} onClick={(e) => { handleHomeClick(e); closeMenu() }}>Home</a>
-          <a href="#work" className={styles.mobileLink} onClick={(e) => { handleWorkClick(e); closeMenu() }}>Work</a>
-          <a href="#about" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); onAboutClick(); closeMenu() }}>About</a>
-          <a href="#contact" className={styles.mobileLink} onClick={(e) => { handleContactClick(e); closeMenu() }}>Contact</a>
+          <a href="#home" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); setTimeout(() => smoothScrollTo(0), 50) }}>Home</a>
+          <a href="#work" className={styles.mobileLink} onClick={(e) => {
+            e.preventDefault(); closeMenu()
+            setTimeout(() => {
+              const wrap = document.getElementById('scroll-wrap')
+              if (wrap) smoothScrollTo((wrap.offsetHeight - window.innerHeight) * 0.95)
+            }, 50)
+          }}>Work</a>
+          <a href="#about" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); setTimeout(() => onAboutClick(), 50) }}>About</a>
+          <a href="#contact" className={styles.mobileLink} onClick={(e) => {
+            e.preventDefault(); closeMenu()
+            setTimeout(() => {
+              const footer = document.getElementById('site-footer')
+              if (footer) smoothScrollTo(footer.getBoundingClientRect().top + window.scrollY)
+            }, 50)
+          }}>Contact</a>
         </div>
       </div>
     </>
