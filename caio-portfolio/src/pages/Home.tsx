@@ -10,11 +10,23 @@ import CustomCursor from '../components/CustomCursor'
 
 export default function Home() {
   const planetCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [scrollReady, setScrollReady] = useState(false)
+  const skipIntro = sessionStorage.getItem('skipIntro') === 'true'
+  if (skipIntro) sessionStorage.removeItem('skipIntro')
+  const [scrollReady, setScrollReady] = useState(skipIntro)
   const [aboutOpen, setAboutOpen] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => { window.scrollTo(0, 0) }, [])
+  useEffect(() => {
+    if (skipIntro) {
+      // Defer one frame so layout is complete before measuring works-section
+      requestAnimationFrame(() => {
+        const workEl = document.getElementById('works-section')
+        if (workEl) window.scrollTo(0, workEl.getBoundingClientRect().top + window.scrollY)
+      })
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [])
 
   return (
     <>
@@ -42,6 +54,7 @@ export default function Home() {
       <IntroAnimation
         planetCanvasRef={planetCanvasRef}
         onScrollReady={() => setScrollReady(true)}
+        skip={skipIntro}
       />
 
       {/* Scroll engine — draws frames on the shared canvas, renders scroll-wrap spacer */}

@@ -9,7 +9,10 @@ export default function ProjectPage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
 
-  const onClose = () => navigate('/')
+  const onClose = () => {
+    sessionStorage.setItem('skipIntro', 'true')
+    navigate('/')
+  }
   const onProjectClick = (id: string) => navigate(`/${id}`)
 
   if (slug === 'omnicontrol') {

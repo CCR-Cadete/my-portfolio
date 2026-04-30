@@ -9,6 +9,7 @@ const BASE   = 'https://res.cloudinary.com/dfiyxjf5t/image/upload/f_webp,q_75/'
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
   onScrollReady: () => void
+  skip?: boolean
 }
 
 interface Particle {
@@ -25,7 +26,7 @@ function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2
 }
 
-export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props) {
+export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }: Props) {
   const bgCanvasRef    = useRef<HTMLCanvasElement>(null)
   const introRef       = useRef<HTMLDivElement>(null)
   const wrapCaioRef    = useRef<HTMLDivElement>(null)
@@ -463,6 +464,23 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
         // Restart the RAF loop when the user returns to this tab
         cancelAnimationFrame(st.rafId)
         st.rafId = requestAnimationFrame(drawBgFrame)
+      }
+    }
+
+    // ── Skip path: returning from a project page — no intro, go straight to scroll ──
+    if (skip) {
+      const pc = planetCanvasRef.current
+      if (pc) {
+        pc.style.transition = 'none'
+        pc.style.opacity    = '1'
+        pc.style.transform  = 'scale(1)'
+      }
+      nameCornerRef.current?.classList.add(styles.nameCornerShow)
+      window.addEventListener('scroll', onHeroScroll, { passive: true })
+      onScrollReady()
+      return () => {
+        mounted = false
+        window.removeEventListener('scroll', onHeroScroll)
       }
     }
 
