@@ -475,12 +475,37 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         pc.style.opacity    = '1'
         pc.style.transform  = 'scale(1)'
       }
+
+      // Show hero content immediately (no word-by-word animation)
+      st.heroVisible = true
+      st.cState      = 'done'
+      heroRoleRef.current?.classList.add(styles.heroRoleShow)
+      heroDividerRef.current?.classList.add(styles.heroDividerShow)
+      heroBodyRef.current?.classList.add(styles.heroBodyShow)
+      if (heroBodyRef.current) {
+        heroBodyRef.current.textContent = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
+      }
+
       nameCornerRef.current?.classList.add(styles.nameCornerShow)
+
+      // Start bg canvas (waveform only — stars already dispersed)
+      const bgEl = bgCanvasRef.current
+      if (bgEl) {
+        bgEl.style.transition = 'none'
+        bgEl.classList.add(styles.bgVisible)
+      }
+      resize()
+      st.rafId = requestAnimationFrame(drawBgFrame)
+      window.addEventListener('resize', resize)
       window.addEventListener('scroll', onHeroScroll, { passive: true })
+      document.addEventListener('visibilitychange', onVisibilityChange)
       onScrollReady()
       return () => {
         mounted = false
+        cancelAnimationFrame(st.rafId)
+        window.removeEventListener('resize', resize)
         window.removeEventListener('scroll', onHeroScroll)
+        document.removeEventListener('visibilitychange', onVisibilityChange)
       }
     }
 
