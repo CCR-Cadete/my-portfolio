@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import IntroAnimation from '../components/IntroAnimation'
 import HeroScroll from '../components/HeroScroll'
+import WorkSection from '../components/WorkSection'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
 import AboutPanel from '../components/AboutPanel'
@@ -43,17 +44,19 @@ export default function Home() {
         onScrollReady={() => setScrollReady(true)}
       />
 
-      {/* Scroll engine — draws frames on the shared canvas */}
+      {/* Scroll engine — draws frames on the shared canvas, renders scroll-wrap spacer */}
       <HeroScroll
         planetCanvasRef={planetCanvasRef}
         enabled={scrollReady}
-        onProjectClick={(id) => navigate(`/${id}`)}
       />
+
+      {/* Work section — normal flow after the scroll spacer, before footer */}
+      <WorkSection onProjectClick={(id) => navigate(`/${id}`)} />
 
       {/* Global nav — top right, appears after intro */}
       <Nav visible={scrollReady} onAboutClick={() => setAboutOpen(true)} />
 
-      {/* Footer — normal flow after the scroll animation, final destination */}
+      {/* Footer — final destination */}
       <Footer />
 
       {/* About panel — slides in on top of everything */}

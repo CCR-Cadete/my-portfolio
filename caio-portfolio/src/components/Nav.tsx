@@ -13,37 +13,21 @@ export default function Nav({ visible, onAboutClick }: Props) {
   const [atTop,         setAtTop]         = useState(true)
   const [menuOpen,      setMenuOpen]      = useState(false)
 
-  // Watch works-section classList for worksShow
-  useEffect(() => {
-    function check() {
-      const el = document.getElementById('works-section')
-      if (!el) return
-      setWorkActive(Array.from(el.classList).some(c => c.includes('worksShow')))
-    }
-
-    const observer = new MutationObserver(check)
-
-    function tryObserve() {
-      const el = document.getElementById('works-section')
-      if (el) {
-        observer.observe(el, { attributes: true, attributeFilter: ['class'] })
-      } else {
-        requestAnimationFrame(tryObserve)
-      }
-    }
-    tryObserve()
-
-    return () => observer.disconnect()
-  }, [])
-
-  // Watch scroll position to detect footer visibility and top-of-page
+  // Single scroll listener covers: top-of-page, work section visibility, footer visibility
   useEffect(() => {
     function onScroll() {
       setAtTop(window.scrollY < 20)
+
+      const workEl = document.getElementById('works-section')
+      if (workEl) {
+        const r = workEl.getBoundingClientRect()
+        setWorkActive(r.top < window.innerHeight * 0.8 && r.bottom > 0)
+      }
+
       const footer = document.getElementById('site-footer')
-      if (!footer) return
-      const rect = footer.getBoundingClientRect()
-      setContactActive(rect.top < window.innerHeight * 0.5)
+      if (footer) {
+        setContactActive(footer.getBoundingClientRect().top < window.innerHeight * 0.5)
+      }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
