@@ -310,7 +310,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
     }
 
     function revealHeroText() {
-      const sentence = "I'm a product designer and a musician in my spare time. I enjoy designing interfaces in the same way I compose music, with intention, rhythm, and harmony in every detail."
+      const sentence = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
       const words    = sentence.split(' ')
       const container = heroBodyRef.current
       if (!container) return

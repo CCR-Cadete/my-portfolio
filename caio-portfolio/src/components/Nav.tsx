@@ -58,10 +58,9 @@ export default function Nav({ visible, onAboutClick }: Props) {
 
   function handleWorkClick(e: React.MouseEvent) {
     e.preventDefault()
-    const wrap = document.getElementById('scroll-wrap')
-    if (!wrap) return
-    const maxY = wrap.offsetHeight - window.innerHeight
-    smoothScrollTo(maxY * 0.95)
+    const workEl = document.getElementById('works-section')
+    if (!workEl) return
+    smoothScrollTo(workEl.getBoundingClientRect().top + window.scrollY)
   }
 
   function handleContactClick(e: React.MouseEvent) {
@@ -120,8 +119,8 @@ export default function Nav({ visible, onAboutClick }: Props) {
           <a href="#work" className={styles.mobileLink} onClick={(e) => {
             e.preventDefault(); closeMenu()
             setTimeout(() => {
-              const wrap = document.getElementById('scroll-wrap')
-              if (wrap) smoothScrollTo((wrap.offsetHeight - window.innerHeight) * 0.95)
+              const workEl = document.getElementById('works-section')
+              if (workEl) smoothScrollTo(workEl.getBoundingClientRect().top + window.scrollY)
             }, 50)
           }}>Work</a>
           <a href="#about" className={styles.mobileLink} onClick={(e) => { e.preventDefault(); closeMenu(); setTimeout(() => onAboutClick(), 50) }}>About</a>

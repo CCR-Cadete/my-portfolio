@@ -151,27 +151,37 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
     function handleScroll() {
       const wrap = document.getElementById('scroll-wrap')
       if (!wrap) return
-      const maxY = wrap.offsetHeight - window.innerHeight
+      const maxY     = wrap.offsetHeight - window.innerHeight
+      // Use the full page height so the frame animation continues through
+      // the Work section and footer instead of locking on the last frame.
+      const totalMaxY = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        maxY,
+      )
 
-      // When user scrolls past the scroll-wrap and into the Work section / footer,
-      // just fade the dark overlay and stop — the Work section handles itself.
+      // ── Frame animation spans the entire page (desktop only) ──
+      if (!isMobile && totalMaxY > 0) {
+        const frameIdx = Math.min(Math.floor((window.scrollY / totalMaxY) * TOTAL), TOTAL - 1)
+        draw(frameIdx)
+        preload(frameIdx, 8)
+        evictCache(frameIdx)
+      }
+
+      // ── Past the hero scroll-wrap: manage overlay, hide words, and exit ──
       if (window.scrollY > maxY && maxY > 0) {
-        const past    = window.scrollY - maxY
-        const fadeOut = Math.min(1, past / 300)
+        const footer = document.getElementById('site-footer')
+        let fadeOut = 0
+        if (footer) {
+          const footerTop = footer.getBoundingClientRect().top
+          fadeOut = Math.max(0, Math.min(1, (window.innerHeight - footerTop) / 300))
+        }
         if (overlay) overlay.style.opacity = (0.30 * (1 - fadeOut)).toFixed(3)
         if (wordsBlockRef.current) wordsBlockRef.current.style.opacity = '0'
         return
       }
 
+      // ── Hero scroll progress (0→1 over the scroll-wrap only) ──
       const p = maxY > 0 ? Math.min(1, window.scrollY / maxY) : 0
-
-      // Frame animation — desktop only
-      if (!isMobile) {
-        const frameIdx = Math.min(Math.floor(p * TOTAL), TOTAL - 1)
-        draw(frameIdx)
-        preload(frameIdx, 8)
-        evictCache(frameIdx)
-      }
 
       // Letter-by-letter word reveal
       const block = wordsBlockRef.current

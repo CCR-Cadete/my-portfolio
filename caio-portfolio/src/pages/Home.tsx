@@ -53,6 +53,24 @@ export default function Home() {
       {/* Work section — normal flow after the scroll spacer, before footer */}
       <WorkSection onProjectClick={(id) => navigate(`/${id}`)} />
 
+      {/*
+       * Top vignette — fades content that scrolls into the nav zone.
+       * z-index 11 + positioned after WorkSection in DOM so it renders
+       * above WorkSection items but below the logo (z-12) and nav (z-50).
+       */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 110,
+          background: 'linear-gradient(to bottom, rgba(5,7,15,1) 0%, rgba(5,7,15,0.6) 50%, transparent 100%)',
+          zIndex: 11,
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* Global nav — top right, appears after intro */}
       <Nav visible={scrollReady} onAboutClick={() => setAboutOpen(true)} />
 
