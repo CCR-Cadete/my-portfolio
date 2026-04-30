@@ -476,14 +476,26 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         pc.style.transform  = 'scale(1)'
       }
 
-      // Show hero content immediately (no word-by-word animation)
+      // Use inline styles directly — bypasses CSS transition delays and class-name
+      // resolution issues. heroContent must be opacity:1 before the first scroll event
+      // fires, otherwise there is a flash of invisible content when the user scrolls back.
       st.heroVisible = true
       st.cState      = 'done'
-      heroRoleRef.current?.classList.add(styles.heroRoleShow)
-      heroDividerRef.current?.classList.add(styles.heroDividerShow)
-      heroBodyRef.current?.classList.add(styles.heroBodyShow)
+
+      if (heroContentRef.current)  heroContentRef.current.style.opacity  = '1'
+      if (heroRoleRef.current)     heroRoleRef.current.style.opacity      = '1'
+      if (heroDividerRef.current)  heroDividerRef.current.style.opacity   = '1'
       if (heroBodyRef.current) {
-        heroBodyRef.current.textContent = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
+        heroBodyRef.current.style.opacity = '1'
+        // Build word spans identical to revealHeroText so existing CSS applies cleanly
+        const sentence = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
+        heroBodyRef.current.innerHTML = ''
+        sentence.split(' ').forEach((w, i, arr) => {
+          const sp = document.createElement('span')
+          sp.className   = `${styles.W} ${styles.Wshow}`
+          sp.textContent = w + (i < arr.length - 1 ? ' ' : '')
+          heroBodyRef.current!.appendChild(sp)
+        })
       }
 
       nameCornerRef.current?.classList.add(styles.nameCornerShow)
