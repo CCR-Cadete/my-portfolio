@@ -82,8 +82,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
     function initConstellation() {
       const W = bgCanvas.width, H = bgCanvas.height
       const isMobile = W <= 768
-      const TOTAL_P  = isMobile ? 80  : 175
-      const CON_P    = isMobile ? 20  : 55
+      const TOTAL_P  = isMobile ? 40  : 150
+      const CON_P    = isMobile ? 0   : 40  // no constellation lines on mobile
       st.particles = Array.from({ length: TOTAL_P }, (_, i) => {
         const isCon = i < CON_P
         const ox    = Math.random(), oy = Math.random()
@@ -105,10 +105,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
     }
 
     function drawBgFrame(ts: number) {
-      if (document.hidden) {
-        st.rafId = requestAnimationFrame(drawBgFrame)
-        return
-      }
+      // When tab is hidden, stop the RAF loop entirely — visibilitychange will restart it
+      if (document.hidden) return
 
       const W = bgCanvas.width, H = bgCanvas.height
       const t = ts * 0.001
@@ -443,21 +441,36 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       }, 2200)
     }
 
+    let heroScrollPending = false
     function onHeroScroll() {
-      const wrap = document.getElementById('scroll-wrap')
-      if (!wrap) return
-      const maxY = wrap.offsetHeight - window.innerHeight
-      if (maxY <= 0) return
-      const p = Math.min(1, window.scrollY / maxY)
-      const heroOpacity = Math.max(0, 1 - p * 5)
-      const content = heroContentRef.current
-      if (content) content.style.opacity = heroOpacity.toFixed(3)
+      if (heroScrollPending) return
+      heroScrollPending = true
+      requestAnimationFrame(() => {
+        heroScrollPending = false
+        const wrap = document.getElementById('scroll-wrap')
+        if (!wrap) return
+        const maxY = wrap.offsetHeight - window.innerHeight
+        if (maxY <= 0) return
+        const p = Math.min(1, window.scrollY / maxY)
+        const heroOpacity = Math.max(0, 1 - p * 5)
+        const content = heroContentRef.current
+        if (content) content.style.opacity = heroOpacity.toFixed(3)
+      })
+    }
+
+    function onVisibilityChange() {
+      if (!document.hidden && mounted) {
+        // Restart the RAF loop when the user returns to this tab
+        cancelAnimationFrame(st.rafId)
+        st.rafId = requestAnimationFrame(drawBgFrame)
+      }
     }
 
     resize()
     st.rafId = requestAnimationFrame(drawBgFrame)
     window.addEventListener('resize', resize)
     window.addEventListener('scroll', onHeroScroll, { passive: true })
+    document.addEventListener('visibilitychange', onVisibilityChange)
     document.fonts.ready.then(() => { if (mounted) run() })
 
     return () => {
@@ -467,6 +480,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady }: Props
       st.timers.forEach(clearTimeout)
       window.removeEventListener('resize', resize)
       window.removeEventListener('scroll', onHeroScroll)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

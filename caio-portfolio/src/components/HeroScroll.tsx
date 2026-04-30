@@ -106,11 +106,14 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
 
     const cache = cacheRef.current
     let lastIdx = -1
+    let rafPending = false
+    const isMobile = window.innerWidth <= 768
+    const MAX_CACHE = 50 // max decoded frames kept in memory on desktop
 
     function resize() {
       canvas.width  = window.innerWidth
       canvas.height = window.innerHeight
-      if (lastIdx >= 0) draw(lastIdx, true)
+      if (!isMobile && lastIdx >= 0) draw(lastIdx, true)
     }
 
     function preload(start: number, n: number) {
@@ -120,6 +123,18 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
           img.crossOrigin = 'anonymous'
           img.src  = frameUrl(i)
           cache[i] = img
+        }
+      }
+    }
+
+    // Evict frames far from current position to prevent memory growth
+    function evictCache(currentIdx: number) {
+      const keys = Object.keys(cache)
+      if (keys.length <= MAX_CACHE) return
+      for (const key of keys) {
+        const k = Number(key)
+        if (Math.abs(k - currentIdx) > MAX_CACHE / 2) {
+          delete cache[k]
         }
       }
     }
@@ -154,7 +169,7 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
       )
     }
 
-    function onScroll() {
+    function handleScroll() {
       const wrap = document.getElementById('scroll-wrap')
       if (!wrap) return
       const maxY = wrap.offsetHeight - window.innerHeight
@@ -174,8 +189,13 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
 
       const p = maxY > 0 ? Math.min(1, window.scrollY / maxY) : 0
 
-      draw(Math.min(Math.floor(p * TOTAL), TOTAL - 1))
-      preload(Math.floor(p * TOTAL), 12)
+      // Frame animation — desktop only, mobile uses a static frame to save memory
+      if (!isMobile) {
+        const frameIdx = Math.min(Math.floor(p * TOTAL), TOTAL - 1)
+        draw(frameIdx)
+        preload(frameIdx, 8)
+        evictCache(frameIdx)
+      }
 
       // ── Scroll words: letter-by-letter reveal, additive (no fade-out per word) ──
       const block = wordsBlockRef.current
@@ -220,8 +240,22 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
       }
     }
 
+    // Throttle scroll to one handler per animation frame
+    function onScroll() {
+      if (rafPending) return
+      rafPending = true
+      requestAnimationFrame(() => {
+        rafPending = false
+        handleScroll()
+      })
+    }
+
     resize()
-    preload(0, 20)
+
+    // On desktop preload initial frames; on mobile just draw frame 0 statically
+    if (!isMobile) {
+      preload(0, 20)
+    }
 
     const frame0 = cache[0]
     if (frame0?.complete && frame0.naturalWidth) {
