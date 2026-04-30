@@ -113,7 +113,9 @@ export default function HeroScroll({ planetCanvasRef, enabled, onProjectClick }:
     function resize() {
       canvas.width  = window.innerWidth
       canvas.height = window.innerHeight
-      if (!isMobile && lastIdx >= 0) draw(lastIdx, true)
+      // Always redraw the last frame after a resize — on mobile this restores the
+      // static frame 0 that the address-bar show/hide resize would otherwise erase
+      if (lastIdx >= 0) draw(lastIdx, true)
     }
 
     function preload(start: number, n: number) {
