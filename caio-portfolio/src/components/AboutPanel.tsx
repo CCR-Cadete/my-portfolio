@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
-import Spline from '@splinetool/react-spline'
 import styles from './AboutPanel.module.css'
+
+// TypeScript declaration for the <spline-viewer> web component
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        url: string
+      }
+    }
+  }
+}
 
 interface Props {
   open: boolean
@@ -27,7 +37,16 @@ export default function AboutPanel({ open, onClose }: Props) {
   const [splineReady, setSplineReady] = useState(false)
 
   useEffect(() => {
-    if (open && !splineReady) setSplineReady(true)
+    if (!open || splineReady) return
+    // Inject the viewer script once, on first open
+    if (!document.querySelector('script[data-spline-viewer]')) {
+      const s = document.createElement('script')
+      s.type = 'module'
+      s.src  = 'https://unpkg.com/@splinetool/viewer@1.12.90/build/spline-viewer.js'
+      s.setAttribute('data-spline-viewer', '')
+      document.head.appendChild(s)
+    }
+    setSplineReady(true)
   }, [open, splineReady])
 
   useEffect(() => () => stopRef.current(), [])
@@ -205,7 +224,7 @@ export default function AboutPanel({ open, onClose }: Props) {
             <div className={styles.photoCircle}>
               <div className={styles.splineScaler}>
                 {splineReady && (
-                  <Spline scene="https://prod.spline.design/49Hes-ELkjWJ1uZd/scene.splinecode" />
+                  <spline-viewer url="https://prod.spline.design/bDkU4ksunu8lSYJ7/scene.splinecode" />
                 )}
               </div>
             </div>
