@@ -22,6 +22,20 @@ interface Particle {
   isCon: boolean
 }
 
+interface ShootingStar {
+  x: number; y: number
+  vx: number; vy: number
+  tailLen: number
+  active: boolean
+  spawnAt: number   // performance.now() timestamp when this slot may next fire
+}
+
+interface Asteroid {
+  x: number; y: number
+  vx: number; vy: number
+  size: number
+}
+
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2
 }
@@ -55,6 +69,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
     rafId:              0,
     glitchIv:           null as ReturnType<typeof setInterval> | null,
     timers:             [] as ReturnType<typeof setTimeout>[],
+    stars:              [] as ShootingStar[],
+    asteroids:          [] as Asteroid[],
   })
 
   useEffect(() => {
@@ -103,6 +119,29 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         }
       })
       st.cps = st.particles.filter(p => p.isCon)
+    }
+
+    // ── Desktop hero effects: shooting stars + asteroids ──
+    // Closure variable so drawBgFrame (below) can read it without an extra event param.
+    let mouseInPage = true
+    function onMouseLeave() { mouseInPage = false }
+    function onMouseEnter() { mouseInPage = true  }
+
+    function initEffects(W: number, H: number) {
+      const now = performance.now()
+      // Two independent shooting-star slots with staggered initial delays
+      st.stars = [
+        { x:0, y:0, vx:0, vy:0, tailLen:0, active:false, spawnAt: now + 1500 + Math.random() * 3500 },
+        { x:0, y:0, vx:0, vy:0, tailLen:0, active:false, spawnAt: now + 4500 + Math.random() * 5000 },
+      ]
+      // Three slow-drifting asteroids spread across the hero
+      st.asteroids = Array.from({ length: 3 }, () => ({
+        x:    Math.random() * W,
+        y:    H * (0.12 + Math.random() * 0.58),
+        vx:   (Math.random() < 0.5 ? 1 : -1) * (0.18 + Math.random() * 0.28),
+        vy:   (Math.random() - 0.5) * 0.10,
+        size: 0.9 + Math.random() * 1.1,
+      }))
     }
 
     function drawBgFrame(ts: number) {
@@ -188,6 +227,109 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
           ctx.strokeStyle = `rgba(77,142,255,${l.a})`
           ctx.lineWidth = 1.2
           ctx.stroke()
+        }
+      }
+
+      // ── Shooting stars + Asteroids (desktop, hero zone only) ──
+      if (st.heroVisible && W > 768 && st.stars.length) {
+        const wrap  = document.getElementById('scroll-wrap')
+        const mxY   = wrap ? wrap.offsetHeight - window.innerHeight : Infinity
+        const inHero = mxY > 0 && window.scrollY <= mxY
+
+        if (inHero) {
+          const now = performance.now()
+
+          // ── Shooting stars (require cursor on page) ──
+          if (mouseInPage) {
+            for (const star of st.stars) {
+              if (!star.active) {
+                if (now >= star.spawnAt) {
+                  const goRight = Math.random() < 0.5
+                  const spd     = 9 + Math.random() * 7
+                  star.vx      = goRight ? spd : -spd
+                  star.vy      = (Math.random() - 0.5) * 2.5
+                  star.x       = goRight ? -130 : W + 130
+                  star.y       = H * (0.07 + Math.random() * 0.62)
+                  star.tailLen = 80 + Math.random() * 90
+                  star.active  = true
+                }
+                continue
+              }
+              star.x += star.vx
+              star.y += star.vy
+              if (star.x < -240 || star.x > W + 240) {
+                star.active  = false
+                star.spawnAt = now + 2500 + Math.random() * 7000
+                continue
+              }
+              const spd = Math.sqrt(star.vx * star.vx + star.vy * star.vy)
+              const nx  = star.vx / spd, ny = star.vy / spd
+              const tx  = star.x - nx * star.tailLen
+              const ty  = star.y - ny * star.tailLen
+              const grad = ctx.createLinearGradient(tx, ty, star.x, star.y)
+              grad.addColorStop(0,   'rgba(255,255,255,0)')
+              grad.addColorStop(0.5, 'rgba(210,225,255,0.10)')
+              grad.addColorStop(1,   'rgba(255,255,255,0.85)')
+              ctx.save()
+              ctx.beginPath()
+              ctx.moveTo(tx, ty)
+              ctx.lineTo(star.x, star.y)
+              ctx.strokeStyle = grad
+              ctx.lineWidth   = 1.5
+              ctx.stroke()
+              ctx.beginPath()
+              ctx.arc(star.x, star.y, 1.8, 0, Math.PI * 2)
+              ctx.fillStyle = 'rgba(255,255,255,0.95)'
+              ctx.fill()
+              ctx.restore()
+            }
+          }
+
+          // ── Asteroids / meteors (always drift when in hero zone) ──
+          for (const ast of st.asteroids) {
+            ast.x += ast.vx
+            ast.y += ast.vy
+            // Soft vertical bounce
+            if (ast.y < H * 0.05) ast.vy =  Math.abs(ast.vy)
+            if (ast.y > H * 0.80) ast.vy = -Math.abs(ast.vy)
+            // Horizontal wrap with new random y
+            if (ast.x < -35) { ast.x = W + 35; ast.y = H * (0.12 + Math.random() * 0.58) }
+            if (ast.x > W + 35) { ast.x = -35; ast.y = H * (0.12 + Math.random() * 0.58) }
+
+            // Soft glow halo
+            const glow = ctx.createRadialGradient(ast.x, ast.y, 0, ast.x, ast.y, ast.size * 6)
+            glow.addColorStop(0,   'rgba(160,190,255,0.38)')
+            glow.addColorStop(0.5, 'rgba(160,190,255,0.07)')
+            glow.addColorStop(1,   'rgba(160,190,255,0)')
+            ctx.beginPath()
+            ctx.arc(ast.x, ast.y, ast.size * 6, 0, Math.PI * 2)
+            ctx.fillStyle = glow
+            ctx.fill()
+
+            // Core dot
+            ctx.beginPath()
+            ctx.arc(ast.x, ast.y, ast.size, 0, Math.PI * 2)
+            ctx.fillStyle = 'rgba(215,230,255,0.88)'
+            ctx.fill()
+
+            // Faint drift trail
+            const tLen = ast.size * 14
+            const aspd = Math.sqrt(ast.vx * ast.vx + ast.vy * ast.vy)
+            if (aspd > 0.05) {
+              const anx = ast.vx / aspd, any = ast.vy / aspd
+              const tg  = ctx.createLinearGradient(
+                ast.x - anx * tLen, ast.y - any * tLen, ast.x, ast.y,
+              )
+              tg.addColorStop(0, 'rgba(160,190,255,0)')
+              tg.addColorStop(1, 'rgba(160,190,255,0.20)')
+              ctx.beginPath()
+              ctx.moveTo(ast.x - anx * tLen, ast.y - any * tLen)
+              ctx.lineTo(ast.x, ast.y)
+              ctx.strokeStyle = tg
+              ctx.lineWidth   = ast.size * 0.7
+              ctx.stroke()
+            }
+          }
         }
       }
 
@@ -300,6 +442,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
 
     function revealHero() {
       st.heroVisible = true
+      initEffects(bgCanvas.width, bgCanvas.height)
 
       heroRoleRef.current?.classList.add(styles.heroRoleShow)
       heroDividerRef.current?.classList.add(styles.heroDividerShow)
@@ -507,10 +650,13 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         bgEl.classList.add(styles.bgVisible)
       }
       resize()
+      initEffects(bgCanvas.width, bgCanvas.height)
       st.rafId = requestAnimationFrame(drawBgFrame)
       window.addEventListener('resize', resize)
       window.addEventListener('scroll', onHeroScroll, { passive: true })
       document.addEventListener('visibilitychange', onVisibilityChange)
+      document.addEventListener('mouseleave', onMouseLeave)
+      document.addEventListener('mouseenter', onMouseEnter)
       onScrollReady()
       return () => {
         mounted = false
@@ -518,6 +664,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         window.removeEventListener('resize', resize)
         window.removeEventListener('scroll', onHeroScroll)
         document.removeEventListener('visibilitychange', onVisibilityChange)
+        document.removeEventListener('mouseleave', onMouseLeave)
+        document.removeEventListener('mouseenter', onMouseEnter)
       }
     }
 
@@ -526,6 +674,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
     window.addEventListener('resize', resize)
     window.addEventListener('scroll', onHeroScroll, { passive: true })
     document.addEventListener('visibilitychange', onVisibilityChange)
+    document.addEventListener('mouseleave', onMouseLeave)
+    document.addEventListener('mouseenter', onMouseEnter)
     document.fonts.ready.then(() => { if (mounted) run() })
 
     return () => {
@@ -536,6 +686,8 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
       window.removeEventListener('resize', resize)
       window.removeEventListener('scroll', onHeroScroll)
       document.removeEventListener('visibilitychange', onVisibilityChange)
+      document.removeEventListener('mouseleave', onMouseLeave)
+      document.removeEventListener('mouseenter', onMouseEnter)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
