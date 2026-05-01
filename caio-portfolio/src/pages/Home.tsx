@@ -28,9 +28,20 @@ export default function Home() {
         if (workEl) window.scrollTo(0, workEl.getBoundingClientRect().top + window.scrollY)
       })
     } else {
+      // Lock scroll during intro so the user can't reach Work/Footer before it finishes
       window.scrollTo(0, 0)
+      document.body.style.overflow = 'hidden'
     }
+
+    return () => { document.body.style.overflow = '' }
   }, [])
+
+  // Unlock scroll as soon as the intro hands off to the hero
+  useEffect(() => {
+    if (scrollReady && !skipIntroRef.current) {
+      document.body.style.overflow = ''
+    }
+  }, [scrollReady])
 
   return (
     <>
