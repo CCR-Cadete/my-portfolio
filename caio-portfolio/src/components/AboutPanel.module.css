@@ -277,8 +277,9 @@
   }
 
   .splineScaler {
-    width: 150%;
-    height: 150%;
+    width: 275%;
+    height: 275%;
+    transform: translate(-50%, -50%) scale(0.5);
   }
 
   /* Text below */
