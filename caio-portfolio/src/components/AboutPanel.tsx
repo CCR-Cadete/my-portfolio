@@ -1,16 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { createElement, useEffect, useRef, useState } from 'react'
 import styles from './AboutPanel.module.css'
-
-// TypeScript declaration for the <spline-viewer> web component
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        url: string
-      }
-    }
-  }
-}
 
 interface Props {
   open: boolean
@@ -223,9 +212,7 @@ export default function AboutPanel({ open, onClose }: Props) {
           <div className={styles.photoWrap}>
             <div className={styles.photoCircle}>
               <div className={styles.splineScaler}>
-                {splineReady && (
-                  <spline-viewer url="https://prod.spline.design/bDkU4ksunu8lSYJ7/scene.splinecode" />
-                )}
+                {splineReady && createElement('spline-viewer', { url: 'https://prod.spline.design/bDkU4ksunu8lSYJ7/scene.splinecode' })}
               </div>
             </div>
           </div>
