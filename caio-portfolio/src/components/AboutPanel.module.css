@@ -276,6 +276,11 @@
     margin: 0 auto;
   }
 
+  .splineScaler {
+    width: 150%;
+    height: 150%;
+  }
+
   /* Text below */
   .content {
     order: 1;
