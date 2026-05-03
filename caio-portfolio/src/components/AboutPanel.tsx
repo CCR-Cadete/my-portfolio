@@ -40,6 +40,17 @@ export default function AboutPanel({ open, onClose }: Props) {
 
   useEffect(() => () => stopRef.current(), [])
 
+  // Lock body scroll while panel is open; restore + go to hero on close
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+      window.scrollTo(0, 0)
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => stopRef.current(), 600)
