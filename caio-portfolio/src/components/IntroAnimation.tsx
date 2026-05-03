@@ -454,7 +454,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
     }
 
     function revealHeroText() {
-      const sentence = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
+      const sentence = "I design interfaces for complex B2B and SaaS products, combining 8 years of experience with technical users and stakeholders with an active use of AI in my process. I use vibe coding to build and validate MVPs faster, and my knowledge in HTML and CSS keeps me close to engineering. Good design, for me, starts way before the first screen."
       const words    = sentence.split(' ')
       const container = heroBodyRef.current
       if (!container) return
@@ -631,7 +631,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
       if (heroBodyRef.current) {
         heroBodyRef.current.style.opacity = '1'
         // Build word spans identical to revealHeroText so existing CSS applies cleanly
-        const sentence = "I'm a product designer and a musician in my spare time. I design interfaces like I compose music, with intention, rhythm, and harmony, combining AI, code, and systems thinking to build clear and scalable experiences."
+        const sentence = "I design interfaces for complex B2B and SaaS products, combining 8 years of experience with technical users and stakeholders with an active use of AI in my process. I use vibe coding to build and validate MVPs faster, and my knowledge in HTML and CSS keeps me close to engineering. Good design, for me, starts way before the first screen."
         heroBodyRef.current.innerHTML = ''
         sentence.split(' ').forEach((w, i, arr) => {
           const sp = document.createElement('span')

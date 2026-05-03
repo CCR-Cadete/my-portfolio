@@ -222,20 +222,20 @@ export default function AboutPanel({ open, onClose }: Props) {
             <h2 className={styles.header}>Hi, I'm Caio,</h2>
 
             <div className={styles.bio}>
-              <p>
-                I'm a Product Designer with 8 years of experience in B2B and SaaS products. My
-                background started in building automation, working directly with technical users and
-                stakeholders on complex supervisory systems, identifying usability failures and
-                redesigning operational flows that had to work under pressure. That experience
-                shaped the way I approach every project.
+              <p>I've spent 8 years designing interfaces for B2B and SaaS products in the technology 
+                 sector, working directly with technical users, engineers, and stakeholders. Throughout 
+                 that time I was constantly in meetings, bridging the gap between what users needed and 
+                 what the interface delivered.
               </p>
               <p>
-                Today I apply that same mindset to digital products, building functional interfaces,
-                scalable design systems and experiences that make sense to the people using them. I
-                actively use AI in my process, building MVPs through vibe coding to validate flows
-                faster. I also have knowledge of HTML and CSS, which brings me closer to
-                development and makes collaboration with engineering teams more fluid and
-                precise.
+                 I actively use AI in my design process, from generating personas and mapping flows to 
+                 building MVPs through vibe coding to validate ideas faster. My knowledge in HTML and CSS 
+                 keeps collaboration with engineering teams precise and fluid.
+              </p>
+               <p>
+                 On a personal note, I'm a musician. I play guitar. And the creativity, technique, and 
+                 precision I put into every composition are equivalent to the delivery I bring to every 
+                 design challenge.
               </p>
             </div>
 
