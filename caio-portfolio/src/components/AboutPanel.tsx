@@ -255,11 +255,11 @@ export default function AboutPanel({ open, onClose }: Props) {
             <div className={styles.stats}>
               <div className={styles.stat}>
                 <span className={styles.statLabel}>40%</span>
-                <span className={styles.statDesc}>Optimization in interface response speed</span>
+                <span className={styles.statDesc}>Average usability improvement across delivered projects</span>
               </div>
               <div className={styles.statRule} />
               <div className={styles.stat}>
-                <span className={styles.statLabel}>10+</span>
+                <span className={styles.statLabel}>20+</span>
                 <span className={styles.statDesc}>Projects B2B & SaaS products delivered</span>
               </div>
               <div className={styles.statRule} />
