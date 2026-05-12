@@ -3,24 +3,24 @@ import styles from './OmniControlPanel.module.css'
 import Footer from './Footer'
 
 // ── Gallery screens ───────────────────────────────────────────────
-// Export each screen from Figma, upload to Cloudinary, then replace these URLs.
+// Export each screen from Figma, upload to ImageKit, then replace these URLs.
 // Figma node IDs for reference:
 //   Dashboard Overview    → 7:4953
 //   AccessControl Overview → 7:5716
 //   GlobalAlarms Overview  → 7:6383
 //   HVAC Command           → 7:7055
 const GALLERY = [
-  { num: '01', label: 'HVAC',     src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560570/01_-_HVAC_ups55o.mp4' },
-  { num: '02', label: 'Lighting', src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560576/02_-_Lighting_bkrvlt.mp4' },
-  { num: '03', label: 'Systems',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560584/03_-_Systems_naqtgo.mp4' },
-  { num: '04', label: 'Schedule', src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776560577/04_-_Schedule_efmg28.mp4' },
+  { num: '01', label: 'HVAC',     src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/OmniControl/01_-_HVAC_ups55o.mp4' },
+  { num: '02', label: 'Lighting', src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/OmniControl/02_-_Lighting_bkrvlt.mp4' },
+  { num: '03', label: 'Systems',  src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/OmniControl/03_-_Systems_naqtgo.mp4' },
+  { num: '04', label: 'Schedule', src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/OmniControl/04_-_Schedule_efmg28.mp4' },
 ]
 
 const ALL_PROJECTS = [
-  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
-  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
-  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
-  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Kinesis_xkz44c.png' },
 ]
 
 interface Props {
@@ -283,7 +283,7 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
           {/* ── 1 · Hero ──────────────────────────────────────────── */}
           <section className={styles.heroSection}>
             <img
-              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png"
+              src="https://ik.imagekit.io/n2zwd2oc9/CoverProjects/CoverProject_otzeww.png"
               alt="OmniControl — Building Management System"
               className={styles.heroImg}
             />
@@ -326,7 +326,7 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
                       loop
                       muted
                       playsInline
-                      preload="none"
+                      preload="auto"
                     />
                   )}
                 </div>
@@ -400,7 +400,7 @@ export default function OmniControlPanel({ open, onClose, onProjectClick }: Prop
             </div>
             <div className={`${styles.solutionVisual} ${styles.reveal}`} style={{ transitionDelay: '120ms' }}>
               <img
-                src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776723110/OmniControl_Mockup_caitsq.png"
+                src="https://ik.imagekit.io/n2zwd2oc9/Images/OmniControl/OmniControl_Mockup_caitsq.png"
                 alt="OmniControl solution mockup"
                 className={styles.solutionFrame}
               />

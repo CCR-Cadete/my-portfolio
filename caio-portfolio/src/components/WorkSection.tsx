@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './WorkSection.module.css'
 
 const projects = [
-  { id: 'omnicontrol', title: 'OmniControl', subtitle: 'Building Management System · UX/UI', image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Omnicontrol_awz7k7.png' },
-  { id: 'nexus',       title: 'Nexus',       subtitle: 'B2B Financial Dashboard · UX/UI',    image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_Nexus_duuzjo.png' },
-  { id: 'depth',       title: 'Depth',       subtitle: 'Global eSIM & Data App · UX/UI',     image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290931/Cover_-_depth_wanegl.png' },
-  { id: 'kinesis',     title: 'Kinesis',     subtitle: 'Drone Control Interface · UI',        image: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776290932/Cover_-_Kinesis_hjmokj.png' },
+  { id: 'omnicontrol', title: 'OmniControl', subtitle: 'Building Management System · UX/UI', image: 'https://ik.imagekit.io/n2zwd2oc9/Covers/Cover_-_Omnicontrol_awz7k7.png' },
+  { id: 'nexus',       title: 'Nexus',       subtitle: 'B2B Financial Dashboard · UX/UI',    image: 'https://ik.imagekit.io/n2zwd2oc9/Covers/Cover_-_Nexus_duuzjo.png' },
+  { id: 'depth',       title: 'Depth',       subtitle: 'Global eSIM & Data App · UX/UI',     image: 'https://ik.imagekit.io/n2zwd2oc9/Covers/Cover_-_depth_wanegl.png' },
+  { id: 'kinesis',     title: 'Kinesis',     subtitle: 'Drone Control Interface · UI',        image: 'https://ik.imagekit.io/n2zwd2oc9/Covers/Cover_-_Kinesis_hjmokj.png' },
 ]
 
 interface Props {

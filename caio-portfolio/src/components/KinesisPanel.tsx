@@ -3,22 +3,22 @@ import styles from './KinesisPanel.module.css'
 import Footer from './Footer'
 
 // ── Gallery screens ───────────────────────────────────────────────
-// Export each screen from Figma, upload to Cloudinary, then replace these URLs.
+// Export each screen from Figma, upload to ImageKit, then replace these URLs.
 // Screen references (Figma section 05 — Key Screens):
 //   Homepage Hero        → product render, spec chips, dual CTA
 //   Product Detail Page  → spec table, module cards, buy block
 //   Features Deep-Dive   → 6-stat horizontal feature grid
 //   Footer               → 4-column typographic grid
 const GALLERY = [
-  { num: '01', label: 'Homepage',   src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776719450/Homepage_hcrulu.mp4' },
-  { num: '02', label: 'Products',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776719460/Product_List_jzufpw.mp4' },
+  { num: '01', label: 'Homepage',   src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/Kinesis/Homepage_hcrulu.mp4' },
+  { num: '02', label: 'Products',  src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/Kinesis/Product_List_jzufpw.mp4' },
 ]
 
 const ALL_PROJECTS = [
-  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
-  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
-  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
-  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Kinesis_xkz44c.png' },
 ]
 
 interface Props {
@@ -223,7 +223,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
           {/* ── 1 · Hero ──────────────────────────────────────────── */}
           <section className={styles.heroSection}>
             <img
-              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png"
+              src="https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Kinesis_xkz44c.png"
               alt="Kinesis — Drone Brand Website"
               className={styles.heroImg}
             />
@@ -269,7 +269,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
                       loop
                       muted
                       playsInline
-                      preload="none"
+                      preload="auto"
                     />
                   )}
                 </div>
@@ -427,7 +427,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
                 <p className={styles.componentBlockTitle}>Details</p>
                 <p className={styles.componentBlockSub}>Full-bleed product view with technical specifications and expandable module sections.</p>
                 <img
-                  src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776711811/Kinesis_-_Detail_aiwl5y.png"
+                  src="https://ik.imagekit.io/n2zwd2oc9/Images/Kinesis/Kinesis_-_Detail_aiwl5y.png"
                   alt="Kinesis detail screen"
                   className={styles.componentBlockImg}
                 />
@@ -438,7 +438,7 @@ export default function KinesisPanel({ open, onClose, onProjectClick }: Props) {
                 <p className={styles.componentBlockTitle}>Features</p>
                 <p className={styles.componentBlockSub}>Structured overview of core capabilities, organized by category with status indicators.</p>
                 <img
-                  src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776711812/Kinesis_-_Features_x77aou.png"
+                  src="https://ik.imagekit.io/n2zwd2oc9/Images/Kinesis/Kinesis_-_Features_x77aou.png"
                   alt="Kinesis features screen"
                   className={styles.componentBlockImg}
                 />

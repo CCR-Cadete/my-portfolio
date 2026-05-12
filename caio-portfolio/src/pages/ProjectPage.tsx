@@ -3,7 +3,7 @@ import OmniControlPanel from '../components/OmniControlPanel'
 import DepthPanel from '../components/DepthPanel'
 import NexusPanel from '../components/NexusPanel'
 import KinesisPanel from '../components/KinesisPanel'
-
+import CustomCursor from '../components/CustomCursor'
 
 export default function ProjectPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -15,20 +15,24 @@ export default function ProjectPage() {
   }
   const onProjectClick = (id: string) => navigate(`/${id}`)
 
+  let panel = null
   if (slug === 'omnicontrol') {
-    return <OmniControlPanel open onClose={onClose} onProjectClick={onProjectClick} />
-  }
-  if (slug === 'depth') {
-    return <DepthPanel open onClose={onClose} onProjectClick={onProjectClick} />
-  }
-  if (slug === 'nexus') {
-    return <NexusPanel open onClose={onClose} onProjectClick={onProjectClick} />
-  }
-  if (slug === 'kinesis') {
-    return <KinesisPanel open onClose={onClose} onProjectClick={onProjectClick} />
+    panel = <OmniControlPanel open onClose={onClose} onProjectClick={onProjectClick} />
+  } else if (slug === 'depth') {
+    panel = <DepthPanel open onClose={onClose} onProjectClick={onProjectClick} />
+  } else if (slug === 'nexus') {
+    panel = <NexusPanel open onClose={onClose} onProjectClick={onProjectClick} />
+  } else if (slug === 'kinesis') {
+    panel = <KinesisPanel open onClose={onClose} onProjectClick={onProjectClick} />
+  } else {
+    navigate('/', { replace: true })
+    return null
   }
 
-  // Unknown slug — redirect home
-  navigate('/', { replace: true })
-  return null
+  return (
+    <>
+      {panel}
+      <CustomCursor />
+    </>
+  )
 }

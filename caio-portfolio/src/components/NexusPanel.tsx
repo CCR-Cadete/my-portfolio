@@ -3,22 +3,22 @@ import styles from './NexusPanel.module.css'
 import Footer from './Footer'
 
 // ── Gallery screens ───────────────────────────────────────────────
-// Export each screen from Figma, upload to Cloudinary, then replace these URLs.
+// Export each screen from Figma, upload to ImageKit, then replace these URLs.
 // Figma node references:
 //   Dashboard          → 06 — Key Screens / Screen 01
 //   Transactions       → 06 — Key Screens / Screen 02
 //   Connected Accounts → 06 — Key Screens / Screen 03
 //   Access Management  → 06 — Key Screens / Screen 04
 const GALLERY = [
-  { num: '01', label: 'Prototype Figma',     src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776650123/Prototype_Figma_cdf4ru.mp4' },
-  { num: '02', label: 'Prototype Vibe Coding',  src: 'https://res.cloudinary.com/dfiyxjf5t/video/upload/v1776650107/Prototype_v0_tikxc0.mp4' },
+  { num: '01', label: 'Prototype Figma',     src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/Nexus/Prototype_Figma_cdf4ru.mp4' },
+  { num: '02', label: 'Prototype Vibe Coding',  src: 'https://ik.imagekit.io/n2zwd2oc9/Videos%20Cases/Nexus/Prototype_v0_tikxc0.mp4' },
 ]
 
 const ALL_PROJECTS = [
-  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776539067/CoverProject_otzeww.png' },
-  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png' },
-  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776628235/depth_threx4.png' },
-  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Kinesis_xkz44c.png' },
+  { id: 'omnicontrol', name: 'OmniControl', desc: 'Building Management System · UX/UI', cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/CoverProject_otzeww.png' },
+  { id: 'nexus',       name: 'Nexus',       desc: 'B2B Financial Dashboard · UX/UI',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Nexus_d1wlxq.png' },
+  { id: 'depth',       name: 'Depth',       desc: 'Global eSIM Platform · UX/UI',       cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/depth_threx4.png' },
+  { id: 'kinesis',     name: 'Kinesis',     desc: 'Drone Brand Website · UI Design',    cover: 'https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Kinesis_xkz44c.png' },
 ]
 
 interface Props {
@@ -261,7 +261,7 @@ export default function NexusPanel({ open, onClose, onProjectClick }: Props) {
           {/* ── 1 · Hero ──────────────────────────────────────────── */}
           <section className={styles.heroSection}>
             <img
-              src="https://res.cloudinary.com/dfiyxjf5t/image/upload/v1776639222/Nexus_d1wlxq.png"
+              src="https://ik.imagekit.io/n2zwd2oc9/CoverProjects/Nexus_d1wlxq.png"
               alt="Nexus — B2B Financial Dashboard"
               className={styles.heroImg}
             />
@@ -307,7 +307,7 @@ export default function NexusPanel({ open, onClose, onProjectClick }: Props) {
                       loop
                       muted
                       playsInline
-                      preload="none"
+                      preload="auto"
                     />
                   )}
                 </div>

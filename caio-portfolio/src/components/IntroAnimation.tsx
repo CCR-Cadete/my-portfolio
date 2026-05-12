@@ -4,7 +4,7 @@ import FRAMES_JSON from '../frames.json'
 import styles from './IntroAnimation.module.css'
 
 const FRAMES = FRAMES_JSON as string[]
-const BASE   = 'https://res.cloudinary.com/dfiyxjf5t/image/upload/f_webp,q_75/'
+const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
 
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -330,6 +330,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
               ctx.stroke()
             }
           }
+
         }
       }
 
@@ -370,7 +371,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
         const pc: HTMLCanvasElement = pCanvas
         const frame0 = new Image()
         frame0.crossOrigin = 'anonymous'
-        frame0.src = `${BASE}${FRAMES[0]}.png`
+        frame0.src = `${BASE}${FRAMES[0]}.webp`
         frame0.onload = () => {
           const pCtx = pc.getContext('2d')
           if (!pCtx) return

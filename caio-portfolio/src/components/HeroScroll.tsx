@@ -5,7 +5,7 @@ import styles from './HeroScroll.module.css'
 
 const FRAMES = FRAMES_JSON as string[]
 const TOTAL  = FRAMES.length
-const BASE   = 'https://res.cloudinary.com/dfiyxjf5t/image/upload/f_webp,q_75/'
+const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
 
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -32,7 +32,7 @@ const WORD_LETTER_OFFSETS = SCROLL_WORDS.map((_, i) =>
 )
 
 function frameUrl(i: number) {
-  return `${BASE}${FRAMES[i]}.png`
+  return `${BASE}${FRAMES[i]}.webp`
 }
 
 export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
@@ -90,7 +90,7 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
     let lastIdx = -1
     let rafPending = false
     const isMobile = window.innerWidth <= 768
-    const MAX_CACHE = 50
+    const MAX_CACHE = 250
 
     function resize() {
       canvas.width  = window.innerWidth
@@ -163,7 +163,7 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
       if (!isMobile && totalMaxY > 0) {
         const frameIdx = Math.min(Math.floor((window.scrollY / totalMaxY) * TOTAL), TOTAL - 1)
         draw(frameIdx)
-        preload(frameIdx, 8)
+        preload(frameIdx, 50)
         evictCache(frameIdx)
       }
 
@@ -223,7 +223,20 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
 
     resize()
 
-    if (!isMobile) preload(0, 20)
+    if (!isMobile) {
+      preload(0, 120)
+
+      // Carrega todos os frames restantes em background, em lotes,
+      // sem competir com o carregamento inicial.
+      let bgIdx = 120
+      function bgPreload() {
+        if (bgIdx >= TOTAL) return
+        preload(bgIdx, 60)
+        bgIdx += 60
+        setTimeout(bgPreload, 400)
+      }
+      setTimeout(bgPreload, 2000)
+    }
 
     const frame0 = cache[0]
     if (frame0?.complete && frame0.naturalWidth) {
