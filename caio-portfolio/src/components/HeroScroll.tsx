@@ -3,7 +3,7 @@ import type React from 'react'
 import FRAMES_JSON from '../frames.json'
 import styles from './HeroScroll.module.css'
 
-const FRAMES = FRAMES_JSON as string[]
+const FRAMES = (FRAMES_JSON as string[]).slice(0, 450)
 const TOTAL  = FRAMES.length
 const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
 
@@ -87,55 +87,37 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
     const ctx = canvas.getContext('2d')!
 
     const cache = cacheRef.current
-    let lastIdx = -1
+    let lastDrawn = -1   // último frame efetivamente desenhado
+    let wantIdx   = -1   // frame que o scroll quer agora
     let rafPending = false
     const isMobile = window.innerWidth <= 768
-    const MAX_CACHE = 250
 
     function resize() {
       canvas.width  = window.innerWidth
       canvas.height = window.innerHeight
-      if (lastIdx >= 0) draw(lastIdx, true)
+      if (lastDrawn >= 0) paintFrame(lastDrawn)
     }
 
+    function ensureImg(i: number): HTMLImageElement {
+      if (!cache[i]) {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        img.src = frameUrl(i)
+        cache[i] = img
+      }
+      return cache[i]
+    }
+
+    // Enfileira frames [start, start+n) sem bloquear
     function preload(start: number, n: number) {
-      for (let i = start; i < Math.min(start + n, TOTAL); i++) {
-        if (!cache[i]) {
-          const img = new Image()
-          img.crossOrigin = 'anonymous'
-          img.src  = frameUrl(i)
-          cache[i] = img
-        }
-      }
+      const end = Math.min(start + n, TOTAL)
+      for (let i = Math.max(0, start); i < end; i++) ensureImg(i)
     }
 
-    function evictCache(currentIdx: number) {
-      const keys = Object.keys(cache)
-      if (keys.length <= MAX_CACHE) return
-      for (const key of keys) {
-        const k = Number(key)
-        if (Math.abs(k - currentIdx) > MAX_CACHE / 2) delete cache[k]
-      }
-    }
-
-    function draw(idx: number, force = false) {
-      if (!force && idx === lastIdx) return
-      lastIdx = idx
-
+    // Desenha apenas — sem callbacks, sem lógica
+    function paintFrame(idx: number) {
       const img = cache[idx]
-      if (!img) {
-        const ni = new Image()
-        ni.crossOrigin = 'anonymous'
-        ni.onload = () => draw(idx, true)
-        ni.src    = frameUrl(idx)
-        cache[idx] = ni
-        return
-      }
-      if (!img.complete || !img.naturalWidth) {
-        img.onload = () => draw(idx, true)
-        return
-      }
-
+      if (!img?.complete || !img.naturalWidth) return
       const cw = canvas.width, ch = canvas.height
       const s  = Math.max(cw / img.naturalWidth, ch / img.naturalHeight)
       ctx.clearRect(0, 0, cw, ch)
@@ -146,28 +128,47 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
         img.naturalWidth  * s,
         img.naturalHeight * s,
       )
+      lastDrawn = idx
+    }
+
+    // Tenta desenhar o frame desejado; se não estiver pronto,
+    // registra onload para atualizar quando chegar
+    function draw(idx: number) {
+      wantIdx = idx
+      const img = cache[idx]
+      if (img?.complete && img.naturalWidth) {
+        if (idx !== lastDrawn) paintFrame(idx)
+        return
+      }
+      // Ainda carregando: garante que a imagem existe e agenda redraw
+      const loading = ensureImg(idx)
+      loading.onload = () => {
+        if (wantIdx === idx) paintFrame(idx)
+      }
     }
 
     function handleScroll() {
       const wrap = document.getElementById('scroll-wrap')
       if (!wrap) return
-      const maxY     = wrap.offsetHeight - window.innerHeight
-      // Use the full page height so the frame animation continues through
-      // the Work section and footer instead of locking on the last frame.
+      const maxY = wrap.offsetHeight - window.innerHeight
       const totalMaxY = Math.max(
         document.documentElement.scrollHeight - window.innerHeight,
         maxY,
       )
 
-      // ── Frame animation spans the entire page (desktop only) ──
+      // ── Animação de frames cobre a página inteira (desktop only) ──
       if (!isMobile && totalMaxY > 0) {
-        const frameIdx = Math.min(Math.floor((window.scrollY / totalMaxY) * TOTAL), TOTAL - 1)
+        const frameIdx = Math.min(
+          Math.floor((window.scrollY / totalMaxY) * TOTAL),
+          TOTAL - 1,
+        )
         draw(frameIdx)
-        preload(frameIdx, 50)
-        evictCache(frameIdx)
+        // Preload à frente e um pouco atrás (para scroll de volta)
+        preload(frameIdx + 1, 60)
+        preload(Math.max(0, frameIdx - 15), 15)
       }
 
-      // ── Past the hero scroll-wrap: manage overlay, hide words, and exit ──
+      // ── Passou o hero scroll-wrap ──
       if (window.scrollY > maxY && maxY > 0) {
         const footer = document.getElementById('site-footer')
         let fadeOut = 0
@@ -180,10 +181,9 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
         return
       }
 
-      // ── Hero scroll progress (0→1 over the scroll-wrap only) ──
+      // ── Progresso dentro do hero scroll-wrap (0→1) ──
       const p = maxY > 0 ? Math.min(1, window.scrollY / maxY) : 0
 
-      // Letter-by-letter word reveal
       const block = wordsBlockRef.current
       if (block) {
         let blockOp = 0
@@ -207,7 +207,6 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
         }
       }
 
-      // Dark overlay fades in at end of hero scroll
       const ot = Math.max(0, Math.min(0.30, (p - 0.70) / 0.25 * 0.30))
       if (overlay) overlay.style.opacity = ot.toFixed(3)
     }
@@ -215,47 +214,44 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
     function onScroll() {
       if (rafPending) return
       rafPending = true
-      requestAnimationFrame(() => {
-        rafPending = false
-        handleScroll()
-      })
-    }
-
-    resize()
-
-    if (!isMobile) {
-      preload(0, 120)
-
-      // Carrega todos os frames restantes em background, em lotes,
-      // sem competir com o carregamento inicial.
-      let bgIdx = 120
-      function bgPreload() {
-        if (bgIdx >= TOTAL) return
-        preload(bgIdx, 60)
-        bgIdx += 60
-        setTimeout(bgPreload, 400)
-      }
-      setTimeout(bgPreload, 2000)
-    }
-
-    const frame0 = cache[0]
-    if (frame0?.complete && frame0.naturalWidth) {
-      draw(0, true)
-      activate()
-    } else {
-      const img0 = cache[0] ?? (() => {
-        const i = new Image()
-        i.crossOrigin = 'anonymous'
-        i.src = frameUrl(0)
-        cache[0] = i
-        return i
-      })()
-      img0.onload = () => { draw(0, true); activate() }
+      requestAnimationFrame(() => { rafPending = false; handleScroll() })
     }
 
     function activate() {
       window.addEventListener('scroll', onScroll, { passive: true })
       window.addEventListener('resize', resize)
+    }
+
+    resize()
+
+    if (!isMobile) {
+      // Pré-carrega os primeiros 80 frames imediatamente
+      preload(0, 80)
+
+      // Background loader: 6 cadeias paralelas cobrindo todos os frames
+      // (corresponde ao limite de conexões simultâneas do browser)
+      const CHAINS = 6
+      for (let c = 0; c < CHAINS; c++) {
+        let i = c
+        const advance = () => {
+          while (i < TOTAL && cache[i]?.complete) i += CHAINS
+          if (i >= TOTAL) return
+          const img = ensureImg(i)
+          if (img.complete) { i += CHAINS; advance(); return }
+          img.addEventListener('load',  () => { i += CHAINS; advance() }, { once: true })
+          img.addEventListener('error', () => { i += CHAINS; advance() }, { once: true })
+        }
+        // Aguarda um tick para não competir com o preload inicial
+        setTimeout(advance, 100)
+      }
+    }
+
+    // Ativa quando frame 0 estiver pronto
+    const img0 = ensureImg(0)
+    if (img0.complete && img0.naturalWidth) {
+      paintFrame(0); activate()
+    } else {
+      img0.onload = () => { paintFrame(0); activate() }
     }
 
     return () => {

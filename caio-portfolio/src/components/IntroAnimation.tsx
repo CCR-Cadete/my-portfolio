@@ -3,7 +3,7 @@ import type React from 'react'
 import FRAMES_JSON from '../frames.json'
 import styles from './IntroAnimation.module.css'
 
-const FRAMES = FRAMES_JSON as string[]
+const FRAMES = (FRAMES_JSON as string[]).slice(0, 450)
 const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
 
 interface Props {
