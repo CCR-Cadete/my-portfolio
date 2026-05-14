@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import styles from './WorkSection.module.css'
 
 const projects = [
@@ -13,14 +13,9 @@ interface Props {
 }
 
 export default function WorkSection({ onProjectClick }: Props) {
-  const [activeProject, setActiveProject] = useState('omnicontrol')
-  const sectionRef  = useRef<HTMLElement>(null)
-  const rowRefs     = useRef<(HTMLDivElement | null)[]>([])
-  const cardRefs    = useRef<(HTMLDivElement | null)[]>([])
+  const sectionRef = useRef<HTMLElement>(null)
+  const cardRefs   = useRef<(HTMLDivElement | null)[]>([])
 
-  const activeImage = projects.find(p => p.id === activeProject)?.image ?? projects[0].image
-
-  // Reveal items when the section enters the viewport
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
@@ -30,9 +25,6 @@ export default function WorkSection({ onProjectClick }: Props) {
       ([entry]) => {
         if (entry.isIntersecting && !revealed) {
           revealed = true
-          rowRefs.current.forEach((el, i) => {
-            if (el) setTimeout(() => el.classList.add(styles.rowShow), i * 100)
-          })
           cardRefs.current.forEach((el, i) => {
             if (el) setTimeout(() => el.classList.add(styles.cardShow), i * 120)
           })
@@ -47,40 +39,7 @@ export default function WorkSection({ onProjectClick }: Props) {
 
   return (
     <section id="works-section" ref={sectionRef} className={styles.section}>
-      {/* Desktop: left project list + right sticky cover */}
-      <div className={styles.leftCol}>
-        {projects.map((p, i) => {
-          const active = activeProject === p.id
-          return (
-            <div
-              key={p.id}
-              ref={el => { rowRefs.current[i] = el }}
-              className={styles.row}
-              onMouseEnter={() => setActiveProject(p.id)}
-              onClick={() => onProjectClick?.(p.id)}
-            >
-              <span className={styles.title} style={{ color: active ? '#FFFFFF' : '#6B7280' }}>
-                {p.title}
-              </span>
-              <span className={styles.sub} style={{ color: active ? '#9CA3AF' : '#374151' }}>
-                {p.subtitle}
-              </span>
-            </div>
-          )
-        })}
-      </div>
-
-      <div className={styles.rightCol}>
-        <img
-          key={activeProject}
-          src={activeImage}
-          alt={activeProject}
-          className={styles.cover}
-        />
-      </div>
-
-      {/* Mobile: vertical card stack */}
-      <div className={styles.mobileCards}>
+      <div className={styles.grid}>
         {projects.map((p, i) => (
           <div
             key={p.id}
@@ -88,7 +47,9 @@ export default function WorkSection({ onProjectClick }: Props) {
             className={styles.card}
             onClick={() => onProjectClick?.(p.id)}
           >
-            <img src={p.image} alt={p.title} className={styles.cardImg} />
+            <div className={styles.imageWrap}>
+              <img src={p.image} alt={p.title} className={styles.cardImg} />
+            </div>
             <div className={styles.cardInfo}>
               <span className={styles.cardTitle}>{p.title}</span>
               <span className={styles.cardSub}>{p.subtitle}</span>

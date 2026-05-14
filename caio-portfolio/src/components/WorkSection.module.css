@@ -1,165 +1,84 @@
-/* ── Works section — normal document flow, appears after the hero scroll spacer ── */
-/* No background: the fixed planet canvas + dark overlay show through seamlessly */
 .section {
   position: relative;
   z-index: 11;
-  display: flex;
-  align-items: flex-start;
-  min-height: 100vh;
+  padding: 80px 8vw 100px;
 }
 
-/* ── Desktop: left column ── */
-.leftCol {
-  flex: 0 0 auto;
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 28px;
+}
+
+.card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 80px 80px 80px 10vw;
-  max-width: 560px;
-}
-
-/* ── Desktop: right sticky column ── */
-.rightCol {
-  flex: 1;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 8vw;
-}
-
-/* ── Project rows ── */
-.row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 14px;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.5s ease, transform 0.5s ease,
-              border-color 0.3s ease, padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.row:first-of-type {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-.rowShow {
+
+.cardShow {
   opacity: 1;
   transform: none;
 }
-.rowShow:hover {
-  padding-left: 12px;
-  border-color: rgba(255, 255, 255, 0.14);
-}
-.rowShow:active {
-  opacity: 0.6;
+
+.imageWrap {
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: clamp(24px, 3vw, 38px);
-  letter-spacing: -0.02em;
-  display: block;
-  transition: color 0.25s ease;
-}
-
-.sub {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.03em;
-  transition: color 0.25s ease;
-}
-
-/* ── Desktop cover image ── */
-.cover {
-  width: clamp(400px, 40vw, 640px);
+.cardImg {
+  width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-  animation: coverFadeIn 0.35s ease forwards;
+  border-radius: 10px;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
 }
 
-@keyframes coverFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.card:hover .cardImg {
+  transform: scale(1.03);
 }
 
-/* ── Mobile cards — hidden on desktop ── */
-.mobileCards {
-  display: none;
+.card:active .cardImg {
+  opacity: 0.7;
 }
 
-/* ── Mobile ── */
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cardTitle {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 1.8vw, 26px);
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: block;
+}
+
+.cardSub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.42);
+  display: block;
+}
+
 @media (max-width: 768px) {
   .section {
-    flex-direction: column;
-    min-height: auto;
-    padding: 80px 0 40px; /* top clears the logo */
+    padding: 60px 6vw 80px;
   }
 
-  .leftCol,
-  .rightCol {
-    display: none;
-  }
-
-  .mobileCards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 0 0 24px;
-    width: 100%;
-  }
-
-  .card {
-    width: 82vw;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-  .cardShow {
-    opacity: 1;
-    transform: none;
-  }
-
-  .cardImg {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-  }
-
-  .cardInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .cardTitle {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: -0.01em;
-    color: #ffffff;
-  }
-
-  .cardSub {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0.03em;
-    color: rgba(255, 255, 255, 0.45);
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }

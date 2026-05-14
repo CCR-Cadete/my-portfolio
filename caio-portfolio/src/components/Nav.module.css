@@ -21,13 +21,13 @@
   font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: #FFF;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .link:hover {
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .linkActive {
