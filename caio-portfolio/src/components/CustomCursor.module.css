@@ -1,22 +1,8 @@
 .dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 5px;
-  height: 5px;
-  margin-left: -2.5px;
-  margin-top: -2.5px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0;
-  will-change: transform;
+  display: none;
 }
 
-.dotHovered {
-  opacity: 0;
-}
+.dotHovered {}
 
 .ring {
   position: fixed;

@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type React from 'react'
-import FRAMES_JSON from '../frames.json'
 import styles from './IntroAnimation.module.css'
-
-const FRAMES = (FRAMES_JSON as string[]).slice(0, 450)
-const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
 
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -370,8 +366,7 @@ export default function IntroAnimation({ planetCanvasRef, onScrollReady, skip }:
       if (pCanvas) {
         const pc: HTMLCanvasElement = pCanvas
         const frame0 = new Image()
-        frame0.crossOrigin = 'anonymous'
-        frame0.src = `${BASE}${FRAMES[0]}.webp`
+        frame0.src = '/Frames/frame-000.webp'
         frame0.onload = () => {
           const pCtx = pc.getContext('2d')
           if (!pCtx) return

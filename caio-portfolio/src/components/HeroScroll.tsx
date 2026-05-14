@@ -1,11 +1,8 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import type React from 'react'
-import FRAMES_JSON from '../frames.json'
 import styles from './HeroScroll.module.css'
 
-const FRAMES = (FRAMES_JSON as string[]).slice(0, 450)
-const TOTAL  = FRAMES.length
-const BASE   = 'https://ik.imagekit.io/n2zwd2oc9/tr:q-60,w-1920/Scroll/'
+const TOTAL = 600
 
 interface Props {
   planetCanvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -32,7 +29,7 @@ const WORD_LETTER_OFFSETS = SCROLL_WORDS.map((_, i) =>
 )
 
 function frameUrl(i: number) {
-  return `${BASE}${FRAMES[i]}.webp`
+  return `/Frames/frame-${String(i).padStart(3, '0')}.webp`
 }
 
 export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
@@ -101,7 +98,6 @@ export default function HeroScroll({ planetCanvasRef, enabled }: Props) {
     function ensureImg(i: number): HTMLImageElement {
       if (!cache[i]) {
         const img = new Image()
-        img.crossOrigin = 'anonymous'
         img.src = frameUrl(i)
         cache[i] = img
       }
